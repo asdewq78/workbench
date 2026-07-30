@@ -1,0 +1,26 @@
+{
+  "name": "我的工作台",
+  "short_name": "工作台",
+  "description": "个人工作台 — 订单管理、每日计划、健康提醒、灵感存档、每日总结、赚钱记录",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#F2F0ED",
+  "theme_color": "#7B9EC7",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "utilities"],
+  "lang": "zh-CN"
+}
