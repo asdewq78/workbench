@@ -168,9 +168,12 @@ img{max-width:100%;display:block}
 .dash-stat-sub{font-size:10px;color:var(--accent-green);font-weight:500}
 
 /* ===== Greeting ===== */
-.greeting-block{margin-bottom:16px}
+.greeting-block{margin-bottom:18px}
 .greeting-title{font-size:24px;font-weight:700;color:var(--text-dark);margin-bottom:2px}
-.greeting-date{font-size:13px;color:var(--text-light)}
+.greeting-subtitle{font-size:13px;color:var(--primary);font-weight:500;margin-bottom:6px}
+.greeting-date{font-size:12px;color:var(--text-light)}
+.greeting-name{cursor:pointer;border-bottom:2px dashed var(--primary-light);transition:var(--transition)}
+.greeting-name:hover{color:var(--primary)}
 
 /* ===== Video List ===== */
 .video-item{
@@ -524,7 +527,8 @@ img{max-width:100%;display:block}
 <!-- ========== HOME: 数据看板 ========== -->
 <section class="page" v-show="currentPage==='home'">
   <div class="greeting-block">
-    <div class="greeting-title">{{greeting}} 👋</div>
+    <div class="greeting-title">{{greeting}}<span v-if="userName">，</span><span class="greeting-name" v-if="userName" @click="editUserName">{{userName}}</span><span class="greeting-name" v-if="!userName" @click="editUserName" style="font-size:14px;color:var(--text-light)">👉 点击设置名字</span> 👋</div>
+    <div class="greeting-subtitle">📊 创作数据看板 · 记录每一步成长</div>
     <div class="greeting-date">{{todayDate}}</div>
   </div>
 
@@ -1012,6 +1016,7 @@ const app=Vue.createApp({
       currentPage:'home',
       drawerOpen:false,
       orderFilter:'all',
+      userName:'',
       orders:[],tools:[],habits:[],habitLogs:[],dailyTasks:[],
       inspirations:[],summaries:[],incomes:[],
       studyLogs:[],readingLogs:[],exerciseLogs:[],
@@ -1058,6 +1063,7 @@ const app=Vue.createApp({
     toggleDrawer(){this.drawerOpen=!this.drawerOpen;},
     closeDrawer(){this.drawerOpen=false;},
     navigateTo(page){this.currentPage=page;},
+    editUserName(){const n=prompt('你的名字？',this.userName||'');if(n!==null){this.userName=n.trim();save('userName',this.userName);this.showToast('名字已更新✨','success');}},
 
     // Helpers
     formatLargeNum(n){if(!n)return'0';if(n>=10000)return(n/10000).toFixed(1)+'万';if(n>=1000)return(n/1000).toFixed(1)+'k';return n.toLocaleString();},
@@ -1065,6 +1071,7 @@ const app=Vue.createApp({
 
     // Data
     loadAllData(){
+      this.userName=load('userName','');
       this.orders=load('orders',[]);
       this.tools=load('tools',[]).length?load('tools',[]):JSON.parse(JSON.stringify(PRESET_TOOLS));
       this.habits=load('habits',[]).length?load('habits',[]):JSON.parse(JSON.stringify(PRESET_HABITS));
