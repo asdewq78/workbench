@@ -32,8 +32,6 @@
   --accent-pink-bg:rgba(199,169,169,0.12);
   --accent-gold:#C9B89A;
   --accent-gold-bg:rgba(201,184,154,0.12);
-  --accent-orange:#D4A574;
-  --accent-orange-bg:rgba(212,165,116,0.12);
   --danger:#C7A0A0;
   --danger-bg:rgba(199,160,160,0.12);
   --border:rgba(200,195,188,0.35);
@@ -43,23 +41,16 @@
   --radius:16px;
   --radius-lg:20px;
   --radius-xl:24px;
-  --font: -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Helvetica Neue",sans-serif;
+  --font:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Helvetica Neue",sans-serif;
   --transition:0.25s cubic-bezier(0.4,0,0.2,1);
-  --nav-height:64px;
-  --sidebar-width:220px;
+  --topbar-height:52px;
 }
 html{font-size:16px;height:100%;overflow:hidden}
 body{
-  font-family:var(--font);
-  background:var(--bg);
-  color:var(--text);
-  line-height:1.5;
-  -webkit-font-smoothing:antialiased;
-  height:100vh;height:100dvh;
-  min-height:-webkit-fill-available;
-  overflow:hidden;
-  user-select:none;
-  -webkit-user-select:none;
+  font-family:var(--font);background:var(--bg);color:var(--text);
+  line-height:1.5;-webkit-font-smoothing:antialiased;
+  height:100vh;height:100dvh;min-height:-webkit-fill-available;
+  overflow:hidden;user-select:none;-webkit-user-select:none;
   padding-top:env(safe-area-inset-top);
   background-image:
     radial-gradient(ellipse at 20% 20%, rgba(123,158,199,0.08) 0%, transparent 60%),
@@ -70,132 +61,144 @@ input,textarea,button,select{font-family:inherit;font-size:inherit}
 button{touch-action:manipulation}
 a{color:var(--primary);text-decoration:none}
 img{max-width:100%;display:block}
-
-/* ===== Scrollbar ===== */
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
-::-webkit-scrollbar-thumb:hover{background:var(--text-lighter)}
-
 /* ===== Glass Card ===== */
 .glass{
-  background:var(--card-bg);
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  transition:var(--transition);
+  background:var(--card-bg);backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);border:1px solid var(--border);
+  border-radius:var(--radius);box-shadow:var(--shadow);transition:var(--transition);
 }
 .glass.clickable{cursor:pointer}
 .glass.clickable:hover{background:var(--card-bg-hover);box-shadow:var(--shadow-lg);transform:translateY(-1px)}
 .glass.clickable:active{transform:scale(0.985)}
 
-/* ===== Layout ===== */
-#app{display:flex;height:100vh;height:100dvh;height:-webkit-fill-available;overflow:hidden}
+/* ===== Top Bar ===== */
+.top-bar{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  height:var(--topbar-height);
+  padding-top:env(safe-area-inset-top);
+  background:rgba(255,255,255,0.55);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding-left:12px;padding-right:12px;
+}
+.top-bar-left{display:flex;align-items:center;gap:8px}
+.top-bar-title{font-size:17px;font-weight:700;color:var(--text-dark);letter-spacing:0.5px}
+.top-bar-right{display:flex;align-items:center;gap:4px}
+.hamburger{
+  width:36px;height:36px;border-radius:50%;border:none;
+  background:var(--card-bg);font-size:20px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text);transition:var(--transition);
+}
+.hamburger:active{background:var(--primary-bg);color:var(--primary)}
+.top-action{
+  width:34px;height:34px;border-radius:50%;border:none;
+  background:transparent;font-size:18px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:var(--transition);
+}
+.top-action:active{background:var(--primary-bg)}
 
-/* Sidebar (Desktop) */
-.sidebar{
-  width:var(--sidebar-width);
-  min-width:var(--sidebar-width);
-  background:rgba(255,255,255,0.45);
-  backdrop-filter:blur(16px);
-  -webkit-backdrop-filter:blur(16px);
+/* ===== Drawer ===== */
+.drawer-overlay{
+  position:fixed;inset:0;z-index:150;
+  background:rgba(0,0,0,0.25);opacity:0;pointer-events:none;
+  transition:opacity 0.3s ease;
+}
+.drawer-overlay.open{opacity:1;pointer-events:auto}
+.drawer{
+  position:fixed;top:0;left:0;bottom:0;z-index:160;
+  width:280px;max-width:85vw;
+  background:rgba(255,255,255,0.85);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
   border-right:1px solid var(--border);
-  display:flex;flex-direction:column;
-  padding:20px 12px;
-  overflow-y:auto;
-  z-index:10;
+  transform:translateX(-100%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  display:flex;flex-direction:column;overflow-y:auto;
+  padding-top:calc(var(--topbar-height) + env(safe-area-inset-top) + 8px);
+  padding-bottom:env(safe-area-inset-bottom);
 }
-.sidebar-logo{
-  font-size:18px;font-weight:700;color:var(--primary);
-  padding:8px 12px 20px;text-align:center;
-  letter-spacing:1px;
+.drawer.open{transform:translateX(0)}
+.drawer-section{padding:8px 16px}
+.drawer-section-title{
+  font-size:11px;font-weight:600;color:var(--text-light);
+  text-transform:uppercase;letter-spacing:1px;
+  padding:6px 0;margin-top:4px;
 }
-.sidebar-nav{flex:1;display:flex;flex-direction:column;gap:2px}
-.sidebar-item{
-  display:flex;align-items:center;gap:10px;
+.drawer-item{
+  display:flex;align-items:center;gap:12px;
   padding:10px 14px;border-radius:var(--radius-sm);
-  font-size:14px;color:var(--text);cursor:pointer;
+  font-size:15px;color:var(--text);cursor:pointer;
   transition:var(--transition);border:none;background:none;width:100%;text-align:left;
 }
-.sidebar-item:hover{background:var(--primary-bg);color:var(--primary)}
-.sidebar-item.active{background:var(--primary-bg);color:var(--primary);font-weight:600}
-.sidebar-item .icon{font-size:18px;width:24px;text-align:center;flex-shrink:0}
-.sidebar-divider{height:1px;background:var(--border);margin:8px 0}
+.drawer-item:hover{background:var(--primary-bg);color:var(--primary)}
+.drawer-item.active{background:var(--primary-bg);color:var(--primary);font-weight:600}
+.drawer-item .icon{font-size:20px;width:26px;text-align:center;flex-shrink:0}
+.drawer-divider{height:1px;background:var(--border);margin:6px 16px}
+.drawer-footer{
+  margin-top:auto;padding:16px;font-size:11px;color:var(--text-lighter);
+  text-align:center;border-top:1px solid var(--border);
+}
 
-/* Main Content */
+/* ===== Main Content ===== */
 .main-content{
-  flex:1;overflow-y:auto;overflow-x:hidden;
-  padding:16px;padding-bottom:calc(var(--nav-height) + 20px);
+  position:fixed;top:var(--topbar-height);top:calc(var(--topbar-height) + env(safe-area-inset-top));
+  left:0;right:0;bottom:0;
+  overflow-y:auto;overflow-x:hidden;
+  padding:16px;
   -webkit-overflow-scrolling:touch;
 }
-@media(min-width:769px){
-  .main-content{padding:24px 32px;padding-bottom:24px}
-}
-
-/* Page Container */
-.page{animation:fadeIn 0.3s ease}
+.main-content.expanded{padding-bottom:env(safe-area-inset-bottom)}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.page-header{margin-bottom:18px}
-.page-title{font-size:22px;font-weight:700;color:var(--text-dark);margin-bottom:4px}
-.page-subtitle{font-size:13px;color:var(--text-light)}
-
-/* ===== Bottom Nav (Mobile) ===== */
-.bottom-nav{
-  position:fixed;bottom:0;left:0;right:0;
-  height:var(--nav-height);
-  background:rgba(255,255,255,0.55);
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-  border-top:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-around;
-  padding:0 8px;padding-bottom:env(safe-area-inset-bottom,0);
-  z-index:100;
-}
-.nav-btn{
-  display:flex;flex-direction:column;align-items:center;gap:2px;
-  padding:6px 10px;border:none;background:none;
-  color:var(--text-light);cursor:pointer;
-  transition:var(--transition);min-width:56px;
-  -webkit-tap-highlight-color:transparent;
-}
-.nav-btn .nav-icon{font-size:22px;line-height:1;transition:var(--transition)}
-.nav-btn .nav-label{font-size:10px;font-weight:500;transition:var(--transition)}
-.nav-btn.active{color:var(--primary)}
-.nav-btn.active .nav-label{font-weight:600}
-
-/* ===== Sub Tabs ===== */
-.sub-tabs{
-  display:flex;gap:6px;margin-bottom:16px;
-  overflow-x:auto;padding-bottom:4px;
-  -webkit-overflow-scrolling:touch;
-  scrollbar-width:none;
-}
-.sub-tabs::-webkit-scrollbar{display:none}
-.sub-tab{
-  padding:7px 16px;border-radius:20px;border:1px solid var(--border);
-  background:var(--card-bg);color:var(--text);font-size:13px;
-  white-space:nowrap;cursor:pointer;transition:var(--transition);
-  flex-shrink:0;
-}
-.sub-tab.active{background:var(--primary);color:#fff;border-color:var(--primary);font-weight:600}
+.page{animation:fadeIn 0.25s ease}
 
 /* ===== Dashboard Stats ===== */
-.stats-row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
-@media(min-width:769px){.stats-row{grid-template-columns:repeat(4,1fr)}}
-.stat-card{
-  padding:16px;text-align:center;
+.dash-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+.dash-stat{
+  padding:16px;text-align:center;display:flex;
+  flex-direction:column;align-items:center;gap:4px;
+}
+.dash-stat-icon{font-size:26px}
+.dash-stat-value{font-size:24px;font-weight:700;color:var(--text-dark);font-variant-numeric:tabular-nums}
+.dash-stat-label{font-size:11px;color:var(--text-light)}
+.dash-stat-sub{font-size:10px;color:var(--accent-green);font-weight:500}
+
+/* ===== Greeting ===== */
+.greeting-block{margin-bottom:16px}
+.greeting-title{font-size:24px;font-weight:700;color:var(--text-dark);margin-bottom:2px}
+.greeting-date{font-size:13px;color:var(--text-light)}
+
+/* ===== Video List ===== */
+.video-item{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 14px;margin-bottom:6px;
+}
+.video-rank{width:24px;height:24px;border-radius:50%;background:var(--primary-bg);
+  color:var(--primary);font-size:12px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.video-info{flex:1;min-width:0}
+.video-title{font-size:14px;font-weight:500;color:var(--text-dark);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.video-date{font-size:11px;color:var(--text-light)}
+.video-views{font-size:14px;font-weight:700;color:var(--primary);white-space:nowrap}
+
+/* ===== Quick Entry Grid ===== */
+.quick-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+.quick-entry{
+  padding:16px;text-align:center;cursor:pointer;
   display:flex;flex-direction:column;align-items:center;gap:6px;
 }
-.stat-icon{font-size:28px}
-.stat-value{font-size:24px;font-weight:700;color:var(--text-dark);font-variant-numeric:tabular-nums}
-.stat-label{font-size:12px;color:var(--text-light)}
+.quick-entry .qe-icon{font-size:28px}
+.quick-entry .qe-label{font-size:13px;font-weight:500;color:var(--text)}
+.quick-entry .qe-sub{font-size:10px;color:var(--text-light)}
 
-/* ===== Cards ===== */
+/* ===== Content Cards ===== */
 .card{padding:16px;margin-bottom:12px}
 .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.card-title{font-size:16px;font-weight:600;color:var(--text-dark);display:flex;align-items:center;gap:8px}
+.card-title{font-size:15px;font-weight:600;color:var(--text-dark);display:flex;align-items:center;gap:8px}
+.card-more{font-size:12px;color:var(--primary);cursor:pointer;font-weight:500}
 .card-badge{font-size:11px;padding:3px 10px;border-radius:12px;font-weight:500}
 .badge-blue{background:var(--primary-bg);color:var(--primary)}
 .badge-green{background:var(--accent-green-bg);color:var(--accent-green)}
@@ -211,32 +214,19 @@ img{max-width:100%;display:block}
   -webkit-tap-highlight-color:transparent;
 }
 .btn-primary{background:var(--primary);color:#fff}
-.btn-primary:hover{background:var(--primary-dark)}
-.btn-primary:active{transform:scale(0.96)}
+.btn-primary:active{transform:scale(0.96);background:var(--primary-dark)}
 .btn-outline{background:transparent;color:var(--primary);border:1.5px solid var(--primary)}
-.btn-outline:hover{background:var(--primary-bg)}
 .btn-danger{background:var(--danger-bg);color:var(--danger)}
 .btn-danger:hover{background:var(--danger);color:#fff}
 .btn-sm{padding:6px 14px;font-size:12px;border-radius:16px}
 .btn-xs{padding:4px 10px;font-size:11px;border-radius:12px}
 .btn-icon{
-  width:36px;height:36px;padding:0;border-radius:50%;
+  width:34px;height:34px;padding:0;border-radius:50%;
   background:var(--card-bg);border:1px solid var(--border);
-  font-size:18px;cursor:pointer;transition:var(--transition);
-  display:inline-flex;align-items:center;justify-content:center;
-  color:var(--text);
+  font-size:16px;cursor:pointer;transition:var(--transition);
+  display:inline-flex;align-items:center;justify-content:center;color:var(--text);
 }
-.btn-icon:hover{background:var(--primary-bg);color:var(--primary)}
-.btn-fab{
-  width:48px;height:48px;border-radius:50%;
-  background:var(--primary);color:#fff;border:none;
-  font-size:24px;cursor:pointer;box-shadow:var(--shadow-lg);
-  display:flex;align-items:center;justify-content:center;
-  transition:var(--transition);
-  position:fixed;bottom:80px;right:20px;z-index:90;
-}
-.btn-fab:hover{transform:scale(1.08);background:var(--primary-dark)}
-.btn-fab:active{transform:scale(0.95)}
+.btn-block{width:100%}
 
 /* ===== Forms ===== */
 .form-group{margin-bottom:14px}
@@ -253,32 +243,25 @@ img{max-width:100%;display:block}
 .form-textarea{resize:vertical;min-height:80px}
 .form-input::placeholder,.form-textarea::placeholder{color:var(--text-lighter)}
 .form-select{cursor:pointer;appearance:none;-webkit-appearance:none}
-.form-row{display:flex;gap:10px}
-.form-row>*{flex:1}
+.form-row{display:flex;gap:10px}.form-row>*{flex:1}
 
 /* ===== Modal ===== */
 .modal-overlay{
   position:fixed;inset:0;z-index:200;
-  background:rgba(0,0,0,0.25);
-  backdrop-filter:blur(2px);
+  background:rgba(0,0,0,0.25);backdrop-filter:blur(2px);
   display:flex;align-items:flex-end;justify-content:center;
   animation:fadeIn 0.2s ease;
 }
-@media(min-width:769px){
-  .modal-overlay{align-items:center}
-}
+@media(min-width:769px){.modal-overlay{align-items:center}}
 .modal-content{
   width:100%;max-width:500px;max-height:85vh;
   background:rgba(255,255,255,0.85);
-  backdrop-filter:blur(24px);
-  -webkit-backdrop-filter:blur(24px);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
   border-radius:var(--radius-xl) var(--radius-xl) 0 0;
   padding:20px;overflow-y:auto;
   animation:slideUp 0.3s ease;
 }
-@media(min-width:769px){
-  .modal-content{border-radius:var(--radius-xl);margin:20px}
-}
+@media(min-width:769px){.modal-content{border-radius:var(--radius-xl);margin:20px}}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .modal-header{
   display:flex;align-items:center;justify-content:space-between;
@@ -292,68 +275,49 @@ img{max-width:100%;display:block}
   display:flex;align-items:center;justify-content:center;
   color:var(--text-light);transition:var(--transition);
 }
-.modal-close:hover{background:var(--danger-bg);color:var(--danger)}
 .modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;padding-top:12px;border-top:1px solid var(--border)}
 
 /* ===== Toast ===== */
 .toast-container{
-  position:fixed;top:16px;left:50%;transform:translateX(-50%);
-  z-index:300;display:flex;flex-direction:column;gap:8px;
-  pointer-events:none;
+  position:fixed;top:60px;left:50%;transform:translateX(-50%);
+  z-index:300;display:flex;flex-direction:column;gap:8px;pointer-events:none;
 }
 .toast{
   padding:10px 20px;border-radius:24px;
   font-size:13px;font-weight:500;color:#fff;
-  animation:toastIn 0.3s ease;
-  text-align:center;white-space:nowrap;
-  pointer-events:auto;
-  box-shadow:var(--shadow-lg);
+  animation:toastIn 0.3s ease;text-align:center;white-space:nowrap;
+  pointer-events:auto;box-shadow:var(--shadow-lg);
 }
-.toast-success{background:#8FAF8F}
-.toast-error{background:#C7A0A0}
+.toast-success{background:var(--accent-green)}
+.toast-error{background:var(--danger)}
 .toast-info{background:var(--primary)}
 @keyframes toastIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
 
-/* ===== Order List ===== */
+/* ===== Lists ===== */
 .order-item{
   display:flex;align-items:center;justify-content:space-between;
   padding:14px 16px;margin-bottom:8px;
 }
 .order-info{flex:1;min-width:0}
-.order-title{font-size:15px;font-weight:600;color:var(--text-dark);margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.order-meta{font-size:12px;color:var(--text-light);display:flex;gap:10px}
-.order-amount{font-size:16px;font-weight:700;color:var(--primary);white-space:nowrap;margin-left:12px}
-.order-status{font-size:11px;padding:3px 10px;border-radius:10px;font-weight:500}
+.order-title{font-size:14px;font-weight:600;color:var(--text-dark);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.order-meta{font-size:11px;color:var(--text-light);display:flex;gap:10px}
+.order-amount{font-size:15px;font-weight:700;color:var(--primary);white-space:nowrap;margin-left:10px}
+.order-status{font-size:10px;padding:3px 10px;border-radius:10px;font-weight:500}
 .status-pending{background:var(--accent-gold-bg);color:var(--accent-gold)}
 .status-done{background:var(--accent-green-bg);color:var(--accent-green)}
-.order-actions{display:flex;gap:4px;margin-left:8px}
 
-/* ===== Tool Grid ===== */
 .tool-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 @media(min-width:500px){.tool-grid{grid-template-columns:repeat(3,1fr)}}
-@media(min-width:769px){.tool-grid{grid-template-columns:repeat(4,1fr)}}
 .tool-card{
-  padding:16px;text-align:center;cursor:pointer;
-  display:flex;flex-direction:column;align-items:center;gap:8px;
-  position:relative;
+  padding:18px 14px;text-align:center;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;
 }
-.tool-icon{font-size:32px}
+.tool-card a{text-decoration:none;color:inherit;display:flex;flex-direction:column;align-items:center;gap:8px;width:100%}
+.tool-icon{font-size:30px}
 .tool-name{font-size:13px;font-weight:500;color:var(--text-dark)}
-.tool-url{font-size:10px;color:var(--text-lighter);word-break:break-all;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tool-actions{position:absolute;top:6px;right:6px;display:flex;gap:2px;opacity:0;transition:var(--transition)}
-.tool-card:hover .tool-actions{opacity:1}
+.tool-url{font-size:10px;color:var(--text-lighter);word-break:break-all;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
 
-/* ===== Habit List ===== */
-.habit-item{
-  display:flex;align-items:center;gap:12px;padding:12px 14px;margin-bottom:8px;
-}
-.habit-icon{font-size:28px;flex-shrink:0}
-.habit-info{flex:1;min-width:0}
-.habit-name{font-size:14px;font-weight:600;color:var(--text-dark)}
-.habit-desc{font-size:11px;color:var(--text-light)}
-.habit-interval{font-size:11px;color:var(--primary);margin-top:2px}
-
-/* Toggle Switch */
+/* ===== Toggle ===== */
 .toggle{
   width:48px;height:28px;border-radius:14px;
   background:var(--border);border:none;cursor:pointer;
@@ -362,95 +326,81 @@ img{max-width:100%;display:block}
 .toggle::after{
   content:'';position:absolute;top:3px;left:3px;
   width:22px;height:22px;border-radius:50%;
-  background:#fff;transition:var(--transition);
-  box-shadow:0 1px 3px rgba(0,0,0,0.1);
+  background:#fff;transition:var(--transition);box-shadow:0 1px 3px rgba(0,0,0,0.1);
 }
-.toggle.on{background:var(--primary)}
-.toggle.on::after{left:23px}
+.toggle.on{background:var(--primary)}.toggle.on::after{left:23px}
+
+/* ===== Habit ===== */
+.habit-item{display:flex;align-items:center;gap:12px;padding:11px 14px;margin-bottom:6px}
+.habit-icon{font-size:26px;flex-shrink:0}
+.habit-info{flex:1;min-width:0}
+.habit-name{font-size:13px;font-weight:600;color:var(--text-dark)}
+.habit-desc{font-size:10px;color:var(--text-light)}
 
 /* ===== Checklist ===== */
-.checklist-item{
-  display:flex;align-items:center;gap:10px;
-  padding:12px 14px;margin-bottom:6px;
-}
+.checklist-item{display:flex;align-items:center;gap:10px;padding:11px 14px;margin-bottom:5px}
 .checkbox{
-  width:22px;height:22px;border-radius:50%;
-  border:2px solid var(--border);flex-shrink:0;
-  cursor:pointer;transition:var(--transition);
-  display:flex;align-items:center;justify-content:center;
-  background:rgba(255,255,255,0.5);
+  width:22px;height:22px;border-radius:50%;border:2px solid var(--border);
+  flex-shrink:0;cursor:pointer;transition:var(--transition);
+  display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.5);
 }
 .checkbox.done{background:var(--accent-green);border-color:var(--accent-green)}
-.checkbox.done::after{content:'✓';color:#fff;font-size:13px;font-weight:700}
-.checklist-time{font-size:13px;font-weight:600;color:var(--primary);width:42px;flex-shrink:0}
-.checklist-text{font-size:14px;color:var(--text-dark);flex:1}
+.checkbox.done::after{content:'✓';color:#fff;font-size:12px;font-weight:700}
+.checklist-time{font-size:12px;font-weight:600;color:var(--primary);width:38px;flex-shrink:0}
+.checklist-text{font-size:13px;color:var(--text-dark);flex:1}
 .checklist-text.done{text-decoration:line-through;color:var(--text-lighter)}
-.checklist-actions{display:flex;gap:4px;flex-shrink:0;opacity:0;transition:var(--transition)}
-.checklist-item:hover .checklist-actions,.checklist-item:active .checklist-actions{opacity:1}
 
-/* ===== Summary / Diary ===== */
+/* ===== Income ===== */
+.income-summary{text-align:center;padding:20px;margin-bottom:12px}
+.income-total{font-size:36px;font-weight:700;color:var(--text-dark);font-variant-numeric:tabular-nums}
+.income-table{width:100%;border-collapse:collapse;font-size:12px}
+.income-table th{text-align:left;padding:10px 8px;font-size:10px;font-weight:600;color:var(--text-light);border-bottom:1.5px solid var(--border)}
+.income-table td{padding:10px 8px;border-bottom:1px solid var(--border)}
+.income-amount{font-weight:600;color:var(--accent-green);font-variant-numeric:tabular-nums}
+
+/* ===== Diary ===== */
 .mood-selector{display:flex;gap:12px;margin-bottom:16px}
-.mood-option{
-  font-size:32px;cursor:pointer;padding:6px;border-radius:50%;
-  transition:var(--transition);border:2px solid transparent;
-  background:none;line-height:1;
-}
-.mood-option:hover{transform:scale(1.15)}
+.mood-option{font-size:32px;cursor:pointer;padding:6px;border-radius:50%;transition:var(--transition);border:2px solid transparent;background:none;line-height:1}
 .mood-option.selected{border-color:var(--primary);background:var(--primary-bg);transform:scale(1.1)}
 .summary-images{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.summary-img{
-  width:80px;height:80px;object-fit:cover;border-radius:var(--radius-sm);
-  border:1px solid var(--border);
-}
+.summary-img{width:80px;height:80px;object-fit:cover;border-radius:var(--radius-sm);border:1px solid var(--border)}
 .img-upload-btn{
   width:80px;height:80px;border-radius:var(--radius-sm);
   border:1.5px dashed var(--border);cursor:pointer;
   display:flex;align-items:center;justify-content:center;
-  font-size:24px;color:var(--text-lighter);transition:var(--transition);
-  background:rgba(255,255,255,0.3);
+  font-size:24px;color:var(--text-lighter);transition:var(--transition);background:rgba(255,255,255,0.3);
 }
-.img-upload-btn:hover{border-color:var(--primary);color:var(--primary)}
-
-/* ===== Income Table ===== */
-.income-summary{
-  text-align:center;padding:20px;margin-bottom:14px;
-}
-.income-total{
-  font-size:36px;font-weight:700;color:var(--text-dark);
-  font-variant-numeric:tabular-nums;
-}
-.income-table{width:100%;border-collapse:collapse;font-size:13px}
-.income-table th{
-  text-align:left;padding:10px 12px;font-size:11px;font-weight:600;
-  color:var(--text-light);text-transform:uppercase;letter-spacing:0.5px;
-  border-bottom:1.5px solid var(--border);
-}
-.income-table td{padding:10px 12px;border-bottom:1px solid var(--border)}
-.income-row{cursor:pointer;transition:var(--transition)}
-.income-row:hover{background:var(--primary-bg)}
-.income-amount{font-weight:600;color:var(--accent-green);font-variant-numeric:tabular-nums}
-.income-actions{display:flex;gap:4px}
 
 /* ===== Inspiration ===== */
 .inspiration-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-@media(min-width:600px){.inspiration-grid{grid-template-columns:repeat(3,1fr)}}
-.inspiration-card{padding:14px;cursor:pointer;position:relative}
-.inspiration-card .card-title{font-size:14px;margin-bottom:6px;color:var(--text-dark);font-weight:600}
-.inspiration-card .card-body{font-size:12px;color:var(--text-light);overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+.inspiration-card{padding:14px;cursor:pointer}
+.inspiration-card .card-body{font-size:12px;color:var(--text-light);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 .inspiration-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px}
 .inspiration-tag{font-size:10px;padding:2px 8px;border-radius:8px;background:var(--primary-bg);color:var(--primary)}
-.hot-topic{font-size:12px;padding:8px 12px;border-radius:var(--radius-sm);margin-bottom:6px;background:var(--accent-pink-bg);color:var(--accent-pink);cursor:pointer;transition:var(--transition)}
-.hot-topic:hover{background:rgba(199,169,169,0.2)}
+.hot-topic{font-size:12px;padding:8px 12px;border-radius:var(--radius-sm);margin-bottom:6px;background:var(--accent-pink-bg);color:var(--accent-pink);cursor:pointer}
 
-/* ===== Exercise Plan ===== */
-.exercise-plan{padding:14px;margin-bottom:12px}
-.exercise-plan summary{font-size:14px;font-weight:600;color:var(--primary);cursor:pointer;padding:4px 0}
-.exercise-plan-content{margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
-.exercise-step{display:flex;gap:10px;padding:8px 0;font-size:13px;align-items:flex-start}
-.exercise-step-num{width:22px;height:22px;border-radius:50%;background:var(--primary-bg);color:var(--primary);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.diet-tip{padding:8px 12px;background:var(--accent-green-bg);border-radius:var(--radius-sm);font-size:12px;color:var(--accent-green);margin-top:8px}
+/* ===== Exercise ===== */
+.exercise-plan details{padding:12px;margin-bottom:10px}
+.exercise-plan summary{font-size:13px;font-weight:600;color:var(--primary);cursor:pointer}
+.exercise-step{display:flex;gap:8px;padding:6px 0;font-size:12px;align-items:flex-start}
+.exercise-step-num{width:20px;height:20px;border-radius:50%;background:var(--primary-bg);color:var(--primary);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.diet-tip{padding:8px 12px;background:var(--accent-green-bg);border-radius:var(--radius-sm);font-size:11px;color:var(--accent-green);margin-top:8px}
 
-/* ===== Study & Reading Logs ===== */
+/* ===== Confirm ===== */
+.confirm-overlay{
+  position:fixed;inset:0;z-index:250;
+  background:rgba(0,0,0,0.3);backdrop-filter:blur(2px);
+  display:flex;align-items:center;justify-content:center;
+}
+.confirm-box{
+  background:rgba(255,255,255,0.9);backdrop-filter:blur(20px);
+  border-radius:var(--radius-lg);padding:24px;
+  max-width:300px;width:90%;text-align:center;box-shadow:var(--shadow-lg);
+}
+.confirm-text{font-size:15px;color:var(--text-dark);margin-bottom:18px}
+.confirm-buttons{display:flex;gap:10px;justify-content:center}
+
+/* ===== Study/Reading/Exercise Logs ===== */
 .log-item{padding:12px 14px;margin-bottom:6px;display:flex;align-items:center;gap:12px}
 .log-icon{font-size:24px;flex-shrink:0}
 .log-info{flex:1;min-width:0}
@@ -464,7 +414,7 @@ img{max-width:100%;display:block}
 .empty-text{font-size:14px}
 
 /* ===== Filter Row ===== */
-.filter-row{display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px}
+.filter-row{display:flex;gap:8px;margin-bottom:12px;overflow-x:auto;padding-bottom:4px}
 .filter-chip{
   padding:6px 14px;border-radius:16px;border:1px solid var(--border);
   background:var(--card-bg);font-size:12px;cursor:pointer;
@@ -472,488 +422,422 @@ img{max-width:100%;display:block}
 }
 .filter-chip.active{background:var(--primary);color:#fff;border-color:var(--primary)}
 
-/* ===== Confirm Dialog ===== */
-.confirm-overlay{
-  position:fixed;inset:0;z-index:250;
-  background:rgba(0,0,0,0.3);backdrop-filter:blur(2px);
-  display:flex;align-items:center;justify-content:center;
-}
-.confirm-box{
-  background:rgba(255,255,255,0.9);
-  backdrop-filter:blur(20px);
-  border-radius:var(--radius-lg);padding:24px;
-  max-width:300px;width:90%;text-align:center;
-  box-shadow:var(--shadow-lg);
-}
-.confirm-text{font-size:15px;color:var(--text-dark);margin-bottom:18px}
-.confirm-buttons{display:flex;gap:10px;justify-content:center}
+/* ===== Section ===== */
+.section-title{font-size:12px;font-weight:600;color:var(--text-light);letter-spacing:0.5px;margin:18px 0 8px;padding-left:2px}
 
-/* ===== Quick Actions ===== */
-.quick-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
-@media(min-width:769px){.quick-actions{grid-template-columns:repeat(4,1fr)}}
-.quick-action{
-  padding:14px 10px;text-align:center;cursor:pointer;
-  display:flex;flex-direction:column;align-items:center;gap:6px;
-}
-.quick-action .icon{font-size:26px}
-.quick-action .label{font-size:12px;font-weight:500;color:var(--text)}
-
-/* ===== Section Divider ===== */
-.section-title{
-  font-size:13px;font-weight:600;color:var(--text-light);
-  letter-spacing:0.5px;margin:20px 0 10px;
-  padding-left:4px;
+/* ===== Desktop ===== */
+@media(min-width:769px){
+  .drawer{transform:translateX(0);position:fixed;z-index:90}
+  .drawer-overlay{display:none}
+  .top-bar{padding-left:292px}
+  .main-content{left:280px}
+  .hamburger{display:none}
 }
 
 /* ===== Utility ===== */
-.text-center{text-align:center}
-.text-right{text-align:right}
-.mt-sm{margin-top:8px}
-.mt-md{margin-top:16px}
-.mb-sm{margin-bottom:8px}
-.mb-md{margin-bottom:16px}
+.text-center{text-align:center}.text-right{text-align:right}
+.mt-sm{margin-top:8px}.mt-md{margin-top:16px}.mb-sm{margin-bottom:8px}.mb-md{margin-bottom:16px}
 .flex-between{display:flex;align-items:center;justify-content:space-between}
 .flex-center{display:flex;align-items:center;justify-content:center}
-.gap-sm{gap:8px}
-.gap-md{gap:12px}
-.w-full{width:100%}
-.hidden{display:none!important}
+.gap-sm{gap:8px}.w-full{width:100%}
 </style>
 </head>
 <body>
 <div id="app">
 
-<!-- ===== DESKTOP SIDEBAR ===== -->
-<nav class="sidebar" v-if="isDesktop">
-  <div class="sidebar-logo">📊 我的工作台</div>
-  <div class="sidebar-nav">
-    <button class="sidebar-item" :class="{active:currentTab==='home'}" @click="switchTab('home')">
-      <span class="icon">🏠</span>首页
+<!-- ===== TOP BAR ===== -->
+<div class="top-bar">
+  <div class="top-bar-left">
+    <button class="hamburger" @click="toggleDrawer">☰</button>
+    <span class="top-bar-title">{{pageTitle}}</span>
+  </div>
+  <div class="top-bar-right">
+    <button class="top-action" @click="navigateTo('douyin');closeDrawer()" title="抖音数据">📊</button>
+    <button class="top-action" @click="navigateTo('daily');closeDrawer()" title="每日计划">✅</button>
+  </div>
+</div>
+
+<!-- ===== DRAWER OVERLAY ===== -->
+<div class="drawer-overlay" :class="{open:drawerOpen}" @click="closeDrawer"></div>
+
+<!-- ===== DRAWER ===== -->
+<nav class="drawer" :class="{open:drawerOpen}">
+  <div class="drawer-section">
+    <div class="drawer-section-title">🎬 创作工作栏</div>
+    <button class="drawer-item" :class="{active:currentPage==='home'}" @click="navigateTo('home');closeDrawer()">
+      <span class="icon">🏠</span>数据看板
     </button>
-    <button class="sidebar-item" :class="{active:currentTab==='plan'}" @click="switchTab('plan')">
-      <span class="icon">✅</span>计划
+    <button class="drawer-item" :class="{active:currentPage==='douyin'}" @click="navigateTo('douyin');closeDrawer()">
+      <span class="icon">📊</span>抖音数据
     </button>
-    <button class="sidebar-item" :class="{active:currentTab==='record'}" @click="switchTab('record')">
-      <span class="icon">📝</span>记录
+    <button class="drawer-item" :class="{active:currentPage==='orders'}" @click="navigateTo('orders');closeDrawer()">
+      <span class="icon">📋</span>订单管理
     </button>
-    <button class="sidebar-item" :class="{active:currentTab==='health'}" @click="switchTab('health')">
-      <span class="icon">❤️</span>健康
+    <button class="drawer-item" :class="{active:currentPage==='inspiration'}" @click="navigateTo('inspiration');closeDrawer()">
+      <span class="icon">💡</span>灵感存档
     </button>
-    <div class="sidebar-divider"></div>
-    <button class="sidebar-item" :class="{active:currentTab==='my'}" @click="switchTab('my')">
-      <span class="icon">📦</span>订单 & 工具
+    <button class="drawer-item" :class="{active:currentPage==='tools'}" @click="navigateTo('tools');closeDrawer()">
+      <span class="icon">🔧</span>工具导航
     </button>
   </div>
+  <div class="drawer-divider"></div>
+  <div class="drawer-section">
+    <div class="drawer-section-title">🏠 个人生活</div>
+    <button class="drawer-item" :class="{active:currentPage==='daily'}" @click="navigateTo('daily');closeDrawer()">
+      <span class="icon">✅</span>每日计划
+    </button>
+    <button class="drawer-item" :class="{active:currentPage==='health'}" @click="navigateTo('health');closeDrawer()">
+      <span class="icon">❤️</span>习惯打卡
+    </button>
+    <button class="drawer-item" :class="{active:currentPage==='summary'}" @click="navigateTo('summary');closeDrawer()">
+      <span class="icon">📝</span>每日总结
+    </button>
+    <button class="drawer-item" :class="{active:currentPage==='income'}" @click="navigateTo('income');closeDrawer()">
+      <span class="icon">💰</span>收入记账
+    </button>
+  </div>
+  <div class="drawer-divider"></div>
+  <div class="drawer-section">
+    <div class="drawer-section-title">📚 学习成长</div>
+    <button class="drawer-item" :class="{active:currentPage==='study'}" @click="navigateTo('study');closeDrawer()">
+      <span class="icon">📖</span>学习备考
+    </button>
+    <button class="drawer-item" :class="{active:currentPage==='reading'}" @click="navigateTo('reading');closeDrawer()">
+      <span class="icon">📕</span>读书记录
+    </button>
+    <button class="drawer-item" :class="{active:currentPage==='exercise'}" @click="navigateTo('exercise');closeDrawer()">
+      <span class="icon">🏃</span>运动记录
+    </button>
+  </div>
+  <div class="drawer-divider"></div>
+  <div class="drawer-section">
+    <button class="drawer-item" :class="{active:currentPage==='settings'}" @click="navigateTo('settings');closeDrawer()">
+      <span class="icon">⚙️</span>数据管理
+    </button>
+  </div>
+  <div class="drawer-footer">我的工作台 · V2</div>
 </nav>
 
 <!-- ===== MAIN CONTENT ===== -->
-<main class="main-content" :style="{paddingBottom: isDesktop ? '24px' : ''}">
+<main class="main-content" :class="{expanded:!drawerOpen}" @click="closeDrawer">
 
-<!-- ========== PAGE: HOME ========== -->
-<section class="page" v-show="currentTab==='home'">
-  <div class="page-header">
-    <div class="page-title">{{greeting}}，{{userName}}</div>
-    <div class="page-subtitle">{{todayDate}} · 新的一天加油 ✨</div>
+<!-- ========== HOME: 数据看板 ========== -->
+<section class="page" v-show="currentPage==='home'">
+  <div class="greeting-block">
+    <div class="greeting-title">{{greeting}} 👋</div>
+    <div class="greeting-date">{{todayDate}}</div>
   </div>
 
-  <div class="stats-row">
-    <div class="stat-card glass">
-      <div class="stat-icon">📋</div>
-      <div class="stat-value">{{todayTaskCount}}</div>
-      <div class="stat-label">今日待办</div>
+  <div class="section-title">📊 抖音核心数据</div>
+  <div class="dash-stats">
+    <div class="dash-stat glass">
+      <div class="dash-stat-icon">▶️</div>
+      <div class="dash-stat-value">{{formatLargeNum(totalDouyinViews)}}</div>
+      <div class="dash-stat-label">总播放量</div>
     </div>
-    <div class="stat-card glass">
-      <div class="stat-icon">💰</div>
-      <div class="stat-value">¥{{todayIncome.toFixed(0)}}</div>
-      <div class="stat-label">今日收入</div>
+    <div class="dash-stat glass">
+      <div class="dash-stat-icon">❤️</div>
+      <div class="dash-stat-value">{{formatLargeNum(totalDouyinLikes)}}</div>
+      <div class="dash-stat-label">总点赞</div>
     </div>
-    <div class="stat-card glass">
-      <div class="stat-icon">💪</div>
-      <div class="stat-value">{{todayHabitDone}}/{{enabledHabitsCount}}</div>
-      <div class="stat-label">健康打卡</div>
+    <div class="dash-stat glass">
+      <div class="dash-stat-icon">💬</div>
+      <div class="dash-stat-value">{{formatLargeNum(totalDouyinComments)}}</div>
+      <div class="dash-stat-label">总评论</div>
     </div>
-    <div class="stat-card glass">
-      <div class="stat-icon">📚</div>
-      <div class="stat-value">{{todayStudyMin}}</div>
-      <div class="stat-label">学习(分钟)</div>
-    </div>
-  </div>
-
-  <div class="section-title">快捷操作</div>
-  <div class="quick-actions">
-    <div class="quick-action glass clickable" @click="switchTab('my');switchSubTab('orders')">
-      <div class="icon">📋</div><div class="label">新增订单</div>
-    </div>
-    <div class="quick-action glass clickable" @click="switchTab('record');switchSubTab('summary')">
-      <div class="icon">✍️</div><div class="label">写总结</div>
-    </div>
-    <div class="quick-action glass clickable" @click="switchTab('record');switchSubTab('income')">
-      <div class="icon">💵</div><div class="label">记一笔</div>
-    </div>
-    <div class="quick-action glass clickable" @click="switchTab('plan');switchSubTab('daily-plan')">
-      <div class="icon">✅</div><div class="label">今日计划</div>
-    </div>
-    <div class="quick-action glass clickable" @click="switchTab('record');switchSubTab('inspiration')">
-      <div class="icon">💡</div><div class="label">灵感存档</div>
-    </div>
-    <div class="quick-action glass clickable" @click="drinkWater">
-      <div class="icon">💧</div><div class="label">喝水 +1</div>
+    <div class="dash-stat glass">
+      <div class="dash-stat-icon">📈</div>
+      <div class="dash-stat-value">{{formatLargeNum(totalDouyinShares)}}</div>
+      <div class="dash-stat-label">总转发</div>
     </div>
   </div>
 
-  <!-- Recent Orders -->
-  <div class="section-title">最近订单</div>
-  <div v-if="recentOrders.length===0" class="empty-state">
-    <div class="empty-icon">📭</div>
-    <div class="empty-text">暂无订单，去「订单管理」添加吧</div>
+  <div class="card glass" style="margin-bottom:14px">
+    <div class="card-header">
+      <div class="card-title">📹 最近作品</div>
+      <span class="card-more" @click.stop="navigateTo('douyin')">全部 →</span>
+    </div>
+    <div v-if="recentVideos.length===0" class="empty-state">
+      <div class="empty-icon">🎬</div>
+      <div class="empty-text">还没有录入作品数据</div>
+    </div>
+    <div v-for="(v,i) in recentVideos" :key="v.id" class="video-item glass clickable" @click="editDouyinVideo(v)">
+      <div class="video-rank">{{i+1}}</div>
+      <div class="video-info">
+        <div class="video-title">{{v.title}}</div>
+        <div class="video-date">{{v.date}}</div>
+      </div>
+      <div class="video-views">{{formatLargeNum(v.views)}}👀</div>
+    </div>
   </div>
-  <div v-for="o in recentOrders" :key="o.id" class="order-item glass clickable" @click="editOrder(o)">
+
+  <div class="section-title">⚡ 快捷操作</div>
+  <div class="quick-grid">
+    <div class="quick-entry glass clickable" @click="navigateTo('orders');addOrder()">
+      <div class="qe-icon">📋</div><div class="qe-label">新增订单</div><div class="qe-sub">记录客户订单</div>
+    </div>
+    <div class="quick-entry glass clickable" @click="navigateTo('income');addIncome()">
+      <div class="qe-icon">💵</div><div class="qe-label">记一笔收入</div><div class="qe-sub">记录收入明细</div>
+    </div>
+    <div class="quick-entry glass clickable" @click="navigateTo('inspiration');addInspiration()">
+      <div class="qe-icon">💡</div><div class="qe-label">记录灵感</div><div class="qe-sub">捕捉创意瞬间</div>
+    </div>
+    <div class="quick-entry glass clickable" @click="navigateTo('summary');addSummary()">
+      <div class="qe-icon">✍️</div><div class="qe-label">写今日总结</div><div class="qe-sub">复盘今天收获</div>
+    </div>
+  </div>
+
+  <div class="card glass">
+    <div class="card-header"><div class="card-title">📋 今日概览</div></div>
+    <div style="display:flex;gap:8px;text-align:center">
+      <div style="flex:1;padding:8px"><div style="font-size:22px;font-weight:700;color:var(--primary)">{{todayTaskCount}}</div><div style="font-size:10px;color:var(--text-light)">今日待办</div></div>
+      <div style="flex:1;padding:8px"><div style="font-size:22px;font-weight:700;color:var(--accent-green)">¥{{todayIncome.toFixed(0)}}</div><div style="font-size:10px;color:var(--text-light)">今日收入</div></div>
+      <div style="flex:1;padding:8px"><div style="font-size:22px;font-weight:700;color:var(--accent-gold)">{{todayHabitDone}}/{{enabledHabitsCount}}</div><div style="font-size:10px;color:var(--text-light)">健康打卡</div></div>
+      <div style="flex:1;padding:8px"><div style="font-size:22px;font-weight:700;color:var(--primary)">{{todayStudyMin}}</div><div style="font-size:10px;color:var(--text-light)">学习分钟</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== DOUYIN DATA ========== -->
+<section class="page" v-show="currentPage==='douyin'">
+  <div style="font-size:20px;font-weight:700;color:var(--text-dark);margin-bottom:4px">📊 抖音数据</div>
+  <div style="font-size:12px;color:var(--text-light);margin-bottom:16px">手动录入作品数据，追踪表现趋势</div>
+
+  <div class="dash-stats" style="margin-bottom:16px">
+    <div class="dash-stat glass"><div class="dash-stat-icon">▶️</div><div class="dash-stat-value">{{formatLargeNum(totalDouyinViews)}}</div><div class="dash-stat-label">总播放</div></div>
+    <div class="dash-stat glass"><div class="dash-stat-icon">❤️</div><div class="dash-stat-value">{{formatLargeNum(totalDouyinLikes)}}</div><div class="dash-stat-label">总点赞</div></div>
+    <div class="dash-stat glass"><div class="dash-stat-icon">💬</div><div class="dash-stat-value">{{formatLargeNum(totalDouyinComments)}}</div><div class="dash-stat-label">总评论</div></div>
+    <div class="dash-stat glass"><div class="dash-stat-icon">📈</div><div class="dash-stat-value">{{formatLargeNum(totalDouyinShares)}}</div><div class="dash-stat-label">总转发</div></div>
+  </div>
+
+  <div class="card glass">
+    <div class="card-header"><div class="card-title">📹 全部作品 ({{douyinVideos.length}})</div></div>
+    <div v-if="douyinVideos.length===0" class="empty-state">
+      <div class="empty-icon">🎬</div><div class="empty-text">还没有录入作品，点击下方按钮添加</div>
+    </div>
+    <div v-for="(v,i) in sortedDouyinVideos" :key="v.id" class="video-item glass clickable" @click="editDouyinVideo(v)" style="margin-bottom:6px">
+      <div class="video-rank">{{i+1}}</div>
+      <div class="video-info">
+        <div class="video-title">{{v.title}}</div>
+        <div class="video-date">{{v.date}} · ▶️{{formatLargeNum(v.views)}} · ❤️{{formatLargeNum(v.likes)}} · 💬{{formatLargeNum(v.comments)}}</div>
+      </div>
+      <button class="btn-icon" @click.stop="deleteDouyinVideo(v)" style="width:28px;height:28px;font-size:12px">🗑️</button>
+    </div>
+  </div>
+  <button class="btn btn-primary w-full mt-md" @click="addDouyinVideo">＋ 录入作品数据</button>
+</section>
+
+<!-- ========== ORDERS ========== -->
+<section class="page" v-show="currentPage==='orders'">
+  <div style="font-size:20px;font-weight:700;color:var(--text-dark);margin-bottom:16px">📋 订单管理</div>
+  <div class="filter-row">
+    <button class="filter-chip" :class="{active:orderFilter==='all'}" @click="orderFilter='all'">全部</button>
+    <button class="filter-chip" :class="{active:orderFilter==='pending'}" @click="orderFilter='pending'">待处理</button>
+    <button class="filter-chip" :class="{active:orderFilter==='done'}" @click="orderFilter='done'">已完成</button>
+  </div>
+  <div v-if="filteredOrders.length===0" class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">暂无订单</div></div>
+  <div v-for="o in filteredOrders" :key="o.id" class="order-item glass clickable" @click="editOrder(o)">
     <div class="order-info">
       <div class="order-title">{{o.title}}</div>
       <div class="order-meta">{{o.customer}} · {{o.date}}</div>
     </div>
     <div class="order-amount">¥{{o.amount.toFixed(0)}}</div>
-    <span class="order-status" :class="o.status==='done'?'status-done':'status-pending'">{{o.status==='done'?'已完成':'待处理'}}</span>
+    <span class="order-status" :class="o.status==='done'?'status-done':'status-pending'">{{o.status==='done'?'✓':'待处理'}}</span>
   </div>
-
-  <!-- Recent Summaries -->
-  <div class="section-title">最近总结</div>
-  <div v-if="recentSummaries.length===0" class="empty-state">
-    <div class="empty-icon">📝</div>
-    <div class="empty-text">暂无总结，去写一篇吧</div>
-  </div>
-  <div v-for="s in recentSummaries" :key="s.id" class="card glass" style="margin-bottom:8px">
-    <div class="flex-between" style="margin-bottom:6px">
-      <span style="font-size:13px;font-weight:600">{{s.date}}</span>
-      <span style="font-size:20px">{{s.mood}}</span>
-    </div>
-    <div style="font-size:13px;color:var(--text-light)">{{s.content.substring(0,100)}}{{s.content.length>100?'...':''}}</div>
-  </div>
+  <button class="btn btn-primary w-full mt-md" @click="addOrder">＋ 新增订单</button>
 </section>
 
-<!-- ========== PAGE: PLAN ========== -->
-<section class="page" v-show="currentTab==='plan'">
-  <div class="page-header">
-    <div class="page-title">计划</div>
+<!-- ========== TOOLS ========== -->
+<section class="page" v-show="currentPage==='tools'">
+  <div style="font-size:20px;font-weight:700;color:var(--text-dark);margin-bottom:16px">🔧 工具导航</div>
+  <div class="tool-grid">
+    <div v-for="t in tools" :key="t.id" class="tool-card glass">
+      <a :href="t.url" target="_blank" rel="noopener">
+        <div class="tool-icon">{{t.icon||'🔗'}}</div>
+        <div class="tool-name">{{t.title}}</div>
+        <div class="tool-url">{{t.url}}</div>
+      </a>
+      <div style="display:flex;gap:4px;margin-top:4px">
+        <button class="btn btn-xs btn-outline" @click.stop="editTool(t)">编辑</button>
+        <button class="btn btn-xs btn-danger" @click.stop="deleteTool(t)">删除</button>
+      </div>
+    </div>
   </div>
-  <div class="sub-tabs">
-    <button class="sub-tab" :class="{active:currentSubTab==='daily-plan'}" @click="switchSubTab('daily-plan')">📅 每日计划</button>
-    <button class="sub-tab" :class="{active:currentSubTab==='study'}" @click="switchSubTab('study')">📚 学习备考</button>
-    <button class="sub-tab" :class="{active:currentSubTab==='reading'}" @click="switchSubTab('reading')">📖 读书记录</button>
-    <button class="sub-tab" :class="{active:currentSubTab==='exercise'}" @click="switchSubTab('exercise')">🏃 运动记录</button>
-  </div>
-
-  <!-- Daily Plan Sub-page -->
-  <div v-show="currentSubTab==='daily-plan'">
-    <div class="card glass" style="margin-bottom:14px">
-      <div class="card-header">
-        <div class="card-title">📅 今日打卡清单</div>
-        <div style="font-size:12px;color:var(--text-light)">{{todayDate}}</div>
-      </div>
-      <div v-if="sortedDailyTasks.length===0" class="empty-state">
-        <div class="empty-icon">☀️</div>
-        <div class="empty-text">今天还没有任务，点击下方添加</div>
-      </div>
-      <div v-for="task in sortedDailyTasks" :key="task.id" class="checklist-item glass">
-        <div class="checkbox" :class="{done:task.completed}" @click="toggleDailyTask(task)"></div>
-        <span class="checklist-time">{{task.time}}</span>
-        <span class="checklist-text" :class="{done:task.completed}">{{task.task}}</span>
-        <div class="checklist-actions">
-          <button class="btn-icon" @click="editDailyTask(task)" title="编辑">✏️</button>
-          <button class="btn-icon" @click="deleteDailyTask(task)" title="删除">🗑️</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Exercise Plan -->
-    <details class="exercise-plan glass">
-      <summary>🏃 每日运动方案（肩颈拉伸 + 增肌塑形 · 15分钟）</summary>
-      <div class="exercise-plan-content">
-        <div style="font-weight:600;font-size:13px;margin-bottom:8px;color:var(--text-dark)">🧘 肩颈拉伸（5分钟）</div>
-        <div class="exercise-step"><span class="exercise-step-num">1</span>颈部前屈后伸 · 各15秒 × 2组</div>
-        <div class="exercise-step"><span class="exercise-step-num">2</span>颈部左右侧屈 · 各15秒 × 2组</div>
-        <div class="exercise-step"><span class="exercise-step-num">3</span>肩部环绕 · 正反各10圈 × 2组</div>
-        <div class="exercise-step"><span class="exercise-step-num">4</span>耸肩放松 · 15次 × 2组</div>
-        <div style="font-weight:600;font-size:13px;margin:12px 0 8px;color:var(--text-dark)">💪 增肌塑形（10分钟）</div>
-        <div class="exercise-step"><span class="exercise-step-num">1</span>平板支撑 · 30秒 × 3组</div>
-        <div class="exercise-step"><span class="exercise-step-num">2</span>仰卧卷腹 · 15次 × 3组</div>
-        <div class="exercise-step"><span class="exercise-step-num">3</span>臀桥 · 15次 × 3组</div>
-        <div class="exercise-step"><span class="exercise-step-num">4</span>跪姿俯卧撑 · 10次 × 3组</div>
-        <div class="exercise-step"><span class="exercise-step-num">5</span>深蹲 · 12次 × 3组</div>
-        <div class="diet-tip">🥗 饮食建议：运动前30分钟可吃一根香蕉补充能量；运动后1小时内补充蛋白质（鸡蛋/牛奶/鸡胸肉），搭配适量碳水（全麦面包/红薯）</div>
-        <div style="margin-top:12px">
-          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px" @click="toggleExerciseDone">
-            <div class="checkbox" :class="{done:exerciseDoneToday}"></div>
-            <span>今日运动已完成 ✓</span>
-          </label>
-        </div>
-      </div>
-    </details>
-
-    <button class="btn btn-primary w-full mt-md" @click="addDailyTask">＋ 新增自定义任务</button>
-  </div>
-
-  <!-- Study Sub-page -->
-  <div v-show="currentSubTab==='study'">
-    <div v-if="studyLogs.length===0" class="empty-state">
-      <div class="empty-icon">📚</div><div class="empty-text">还没有学习记录</div>
-    </div>
-    <div v-for="log in studyLogs" :key="log.id" class="log-item glass">
-      <div class="log-icon">📖</div>
-      <div class="log-info">
-        <div class="log-title">{{log.subject}}</div>
-        <div class="log-meta">{{log.date}} · {{log.notes}}</div>
-      </div>
-      <div class="log-duration">{{log.durationMinutes}}分钟</div>
-      <div style="display:flex;gap:4px">
-        <button class="btn-icon" @click="editStudyLog(log)">✏️</button>
-        <button class="btn-icon" @click="deleteStudyLog(log)">🗑️</button>
-      </div>
-    </div>
-    <button class="btn btn-primary w-full mt-md" @click="addStudyLog">＋ 添加学习记录</button>
-  </div>
-
-  <!-- Reading Sub-page -->
-  <div v-show="currentSubTab==='reading'">
-    <div v-if="readingLogs.length===0" class="empty-state">
-      <div class="empty-icon">📖</div><div class="empty-text">还没有读书记录</div>
-    </div>
-    <div v-for="log in readingLogs" :key="log.id" class="log-item glass">
-      <div class="log-icon">📕</div>
-      <div class="log-info">
-        <div class="log-title">{{log.bookTitle}}</div>
-        <div class="log-meta">{{log.date}} · {{log.author}} · {{log.notes}}</div>
-      </div>
-      <div class="log-duration">{{log.pages}}页</div>
-      <div style="display:flex;gap:4px">
-        <button class="btn-icon" @click="editReadingLog(log)">✏️</button>
-        <button class="btn-icon" @click="deleteReadingLog(log)">🗑️</button>
-      </div>
-    </div>
-    <button class="btn btn-primary w-full mt-md" @click="addReadingLog">＋ 添加读书记录</button>
-  </div>
-
-  <!-- Exercise Sub-page -->
-  <div v-show="currentSubTab==='exercise'">
-    <div v-if="exerciseLogs.length===0" class="empty-state">
-      <div class="empty-icon">🏃</div><div class="empty-text">还没有运动记录</div>
-    </div>
-    <div v-for="log in exerciseLogs" :key="log.id" class="log-item glass">
-      <div class="log-icon">{{log.type==='shoulder_stretch'?'🧘':log.type==='muscle_building'?'💪':'🏃'}}</div>
-      <div class="log-info">
-        <div class="log-title">{{log.type==='shoulder_stretch'?'肩颈拉伸':log.type==='muscle_building'?'增肌塑形':log.customType||'运动'}}</div>
-        <div class="log-meta">{{log.date}} · {{log.exercises||''}}</div>
-      </div>
-      <div class="log-duration">{{log.durationMinutes}}分钟</div>
-      <div style="display:flex;gap:4px">
-        <button class="btn-icon" @click="editExerciseLog(log)">✏️</button>
-        <button class="btn-icon" @click="deleteExerciseLog(log)">🗑️</button>
-      </div>
-    </div>
-    <button class="btn btn-primary w-full mt-md" @click="addExerciseLog">＋ 添加运动记录</button>
-  </div>
+  <button class="btn btn-primary w-full mt-md" @click="addTool">＋ 添加网址</button>
 </section>
 
-<!-- ========== PAGE: RECORD ========== -->
-<section class="page" v-show="currentTab==='record'">
-  <div class="page-header"><div class="page-title">记录</div></div>
-  <div class="sub-tabs">
-    <button class="sub-tab" :class="{active:currentSubTab==='inspiration'}" @click="switchSubTab('inspiration')">💡 灵感存档</button>
-    <button class="sub-tab" :class="{active:currentSubTab==='summary'}" @click="switchSubTab('summary')">📝 每日总结</button>
-    <button class="sub-tab" :class="{active:currentSubTab==='income'}" @click="switchSubTab('income')">💰 赚钱记录</button>
+<!-- ========== HEALTH ========== -->
+<section class="page" v-show="currentPage==='health'">
+  <div style="font-size:20px;font-weight:700;color:var(--text-dark);margin-bottom:4px">❤️ 习惯打卡</div>
+  <div style="font-size:12px;color:var(--text-light);margin-bottom:12px">今日：💧×{{todayWaterCount}} 🧘×{{todayStretchCount}} 👁️×{{todayEyeCount}}</div>
+  <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+    <button class="btn btn-sm" style="background:var(--accent-green-bg);color:var(--accent-green);flex:1" @click="drinkWater">💧 喝水</button>
+    <button class="btn btn-sm" style="background:var(--primary-bg);color:var(--primary);flex:1" @click="doStretch">🧘 拉伸</button>
+    <button class="btn btn-sm" style="background:var(--accent-gold-bg);color:var(--accent-gold);flex:1" @click="doEyeRest">👁️ 护眼</button>
   </div>
-
-  <!-- Inspiration Sub-page -->
-  <div v-show="currentSubTab==='inspiration'">
-    <div class="section-title">🔥 热门选题参考</div>
-    <div class="hot-topic glass" v-for="topic in hotTopics" :key="topic" @click="useHotTopic(topic)">{{topic}}</div>
-    <button class="btn btn-sm btn-outline mb-md" @click="refreshHotTopics">🔄 刷新选题</button>
-
-    <div class="section-title">我的灵感</div>
-    <div class="inspiration-grid">
-      <div v-if="inspirations.length===0" class="empty-state" style="grid-column:1/-1">
-        <div class="empty-icon">💡</div><div class="empty-text">还没有灵感记录</div>
-      </div>
-      <div v-for="item in inspirations" :key="item.id" class="inspiration-card glass clickable" @click="editInspiration(item)">
-        <div class="card-title">{{item.title}}</div>
-        <div class="card-body">{{item.content}}</div>
-        <div class="inspiration-tags">
-          <span class="inspiration-tag" v-for="tag in item.tags" :key="tag">{{tag}}</span>
-        </div>
-        <div style="font-size:10px;color:var(--text-lighter);margin-top:6px">{{item.date}}</div>
-      </div>
-    </div>
-    <button class="btn btn-primary w-full mt-md" @click="addInspiration">＋ 添加灵感</button>
-  </div>
-
-  <!-- Summary Sub-page -->
-  <div v-show="currentSubTab==='summary'">
-    <div v-if="summaries.length===0" class="empty-state">
-      <div class="empty-icon">📝</div><div class="empty-text">还没有每日总结</div>
-    </div>
-    <div v-for="s in summaries" :key="s.id" class="card glass" style="margin-bottom:10px;cursor:pointer" @click="editSummary(s)">
-      <div class="flex-between" style="margin-bottom:6px">
-        <span style="font-size:13px;font-weight:600">{{s.date}}</span>
-        <span style="font-size:24px">{{s.mood}}</span>
-      </div>
-      <div style="font-size:13px;color:var(--text-light);white-space:pre-wrap">{{s.content}}</div>
-      <div class="summary-images" v-if="s.images&&s.images.length>0">
-        <img class="summary-img" v-for="(img,i) in s.images" :key="i" :src="img" @click.stop="previewImage(img)">
-      </div>
-    </div>
-    <button class="btn btn-primary w-full mt-md" @click="addSummary">＋ 写今日总结</button>
-  </div>
-
-  <!-- Income Sub-page -->
-  <div v-show="currentSubTab==='income'">
-    <div class="income-summary glass">
-      <div style="font-size:13px;color:var(--text-light);margin-bottom:4px">本月总收入</div>
-      <div class="income-total">¥{{monthlyIncome.toFixed(2)}}</div>
-      <div style="font-size:11px;color:var(--text-lighter);margin-top:4px">{{currentMonth}}月 · {{incomes.length}}条记录</div>
-    </div>
-    <div class="card glass" style="overflow-x:auto">
-      <table class="income-table" v-if="incomes.length>0">
-        <thead><tr><th>日期</th><th>项目</th><th>金额</th><th>备注</th><th></th></tr></thead>
-        <tbody>
-          <tr v-for="item in sortedIncomes" :key="item.id" class="income-row" @click="editIncome(item)">
-            <td>{{item.date}}</td>
-            <td>{{item.project}}</td>
-            <td class="income-amount">¥{{item.amount.toFixed(2)}}</td>
-            <td style="font-size:12px;color:var(--text-light)">{{item.notes}}</td>
-            <td class="income-actions">
-              <button class="btn btn-xs btn-outline" @click.stop="editIncome(item)">编辑</button>
-              <button class="btn btn-xs btn-danger" @click.stop="deleteIncome(item)">删除</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div v-else class="empty-state"><div class="empty-icon">💵</div><div class="empty-text">暂无收入记录</div></div>
-    </div>
-    <button class="btn btn-primary w-full mt-md" @click="addIncome">＋ 记一笔收入</button>
-  </div>
-</section>
-
-<!-- ========== PAGE: HEALTH ========== -->
-<section class="page" v-show="currentTab==='health'">
-  <div class="page-header">
-    <div class="page-title">健康管理</div>
-    <div class="page-subtitle">开启提醒，养成健康好习惯</div>
-  </div>
-
-  <div class="card glass" style="margin-bottom:14px">
-    <div class="card-header"><div class="card-title">💧 快速记录</div></div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn" style="background:var(--accent-green-bg);color:var(--accent-green);flex:1" @click="drinkWater">💧 喝水 (+1杯)</button>
-      <button class="btn" style="background:var(--primary-bg);color:var(--primary);flex:1" @click="doStretch">🧘 拉伸 (+1次)</button>
-      <button class="btn" style="background:var(--accent-gold-bg);color:var(--accent-gold);flex:1" @click="doEyeRest">👁️ 护眼 (+1次)</button>
-    </div>
-    <div style="margin-top:12px;font-size:12px;color:var(--text-light);text-align:center">
-      今日：💧×{{todayWaterCount}} 🧘×{{todayStretchCount}} 👁️×{{todayEyeCount}}
-    </div>
-  </div>
-
   <div class="card glass">
-    <div class="card-header">
-      <div class="card-title">⏰ 提醒设置</div>
-      <div style="font-size:12px;color:var(--text-light)">已开启 {{enabledHabitsCount}}/{{habits.length}}</div>
-    </div>
+    <div class="card-header"><div class="card-title">⏰ 提醒设置</div><span style="font-size:11px;color:var(--text-light)">{{enabledHabitsCount}}/{{habits.length}} 已开启</span></div>
     <div v-for="h in habits" :key="h.id" class="habit-item glass">
       <div class="habit-icon">{{h.icon}}</div>
-      <div class="habit-info">
-        <div class="habit-name">{{h.name}}</div>
-        <div class="habit-desc">{{h.description}}</div>
-        <div class="habit-interval">每 {{h.intervalMinutes}} 分钟提醒</div>
-      </div>
+      <div class="habit-info"><div class="habit-name">{{h.name}}</div><div class="habit-desc">每{{h.intervalMinutes}}分钟 · {{h.description}}</div></div>
       <button class="toggle" :class="{on:h.enabled}" @click="toggleHabit(h)"></button>
-      <button class="btn-icon" @click="editHabit(h)" style="margin-left:4px">✏️</button>
+      <button class="btn-icon" @click="editHabit(h)" style="width:28px;height:28px;font-size:12px">✏️</button>
     </div>
-    <button class="btn btn-outline w-full mt-sm" @click="addHabit">＋ 添加自定义习惯</button>
+    <button class="btn btn-outline w-full mt-sm" @click="addHabit">＋ 添加习惯</button>
   </div>
 </section>
 
-<!-- ========== PAGE: MY ========== -->
-<section class="page" v-show="currentTab==='my'">
-  <div class="page-header"><div class="page-title">管理</div></div>
-  <div class="sub-tabs">
-    <button class="sub-tab" :class="{active:currentSubTab==='orders'}" @click="switchSubTab('orders')">📋 订单管理</button>
-    <button class="sub-tab" :class="{active:currentSubTab==='tools'}" @click="switchSubTab('tools')">🔧 工具导航</button>
+<!-- ========== DAILY PLAN ========== -->
+<section class="page" v-show="currentPage==='daily'">
+  <div style="font-size:20px;font-weight:700;color:var(--text-dark);margin-bottom:12px">✅ 每日计划</div>
+  <div class="card glass" style="margin-bottom:14px">
+    <div class="card-header"><div class="card-title">📅 {{todayDate}}</div></div>
+    <div v-if="sortedDailyTasks.length===0" class="empty-state"><div class="empty-icon">☀️</div><div class="empty-text">今天还没有任务</div></div>
+    <div v-for="task in sortedDailyTasks" :key="task.id" class="checklist-item glass">
+      <div class="checkbox" :class="{done:task.completed}" @click="toggleDailyTask(task)"></div>
+      <span class="checklist-time">{{task.time}}</span>
+      <span class="checklist-text" :class="{done:task.completed}">{{task.task}}</span>
+      <button class="btn-icon" @click="editDailyTask(task)" style="width:28px;height:28px;font-size:12px">✏️</button>
+      <button class="btn-icon" @click="deleteDailyTask(task)" style="width:28px;height:28px;font-size:12px">🗑️</button>
+    </div>
   </div>
-
-  <!-- Orders Sub-page -->
-  <div v-show="currentSubTab==='orders'">
-    <div class="filter-row">
-      <button class="filter-chip" :class="{active:orderFilter==='all'}" @click="orderFilter='all'">全部</button>
-      <button class="filter-chip" :class="{active:orderFilter==='pending'}" @click="orderFilter='pending'">待处理</button>
-      <button class="filter-chip" :class="{active:orderFilter==='done'}" @click="orderFilter='done'">已完成</button>
-    </div>
-    <div v-if="filteredOrders.length===0" class="empty-state">
-      <div class="empty-icon">📭</div><div class="empty-text">暂无订单</div>
-    </div>
-    <div v-for="o in filteredOrders" :key="o.id" class="order-item glass clickable" @click="editOrder(o)">
-      <div class="order-info">
-        <div class="order-title">{{o.title}}</div>
-        <div class="order-meta">{{o.customer}} · {{o.date}}</div>
+  <div class="exercise-plan card glass">
+    <details>
+      <summary>🏃 运动方案（肩颈拉伸 + 增肌 · 15分钟）</summary>
+      <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
+        <div style="font-weight:600;font-size:12px;margin-bottom:6px">🧘 肩颈拉伸 5分钟</div>
+        <div class="exercise-step"><span class="exercise-step-num">1</span>颈部前屈后伸 各15秒×2组</div>
+        <div class="exercise-step"><span class="exercise-step-num">2</span>颈部左右侧屈 各15秒×2组</div>
+        <div class="exercise-step"><span class="exercise-step-num">3</span>肩部环绕 正反各10圈×2组</div>
+        <div class="exercise-step"><span class="exercise-step-num">4</span>耸肩放松 15次×2组</div>
+        <div style="font-weight:600;font-size:12px;margin:10px 0 6px">💪 增肌塑形 10分钟</div>
+        <div class="exercise-step"><span class="exercise-step-num">1</span>平板支撑 30秒×3组</div>
+        <div class="exercise-step"><span class="exercise-step-num">2</span>仰卧卷腹 15次×3组</div>
+        <div class="exercise-step"><span class="exercise-step-num">3</span>臀桥 15次×3组</div>
+        <div class="exercise-step"><span class="exercise-step-num">4</span>跪姿俯卧撑 10次×3组</div>
+        <div class="exercise-step"><span class="exercise-step-num">5</span>深蹲 12次×3组</div>
+        <div class="diet-tip">🥗 运动前吃香蕉补充能量，运动后1小时内补充蛋白质</div>
       </div>
-      <div class="order-amount">¥{{o.amount.toFixed(0)}}</div>
-      <span class="order-status" :class="o.status==='done'?'status-done':'status-pending'">{{o.status==='done'?'已完成':'待处理'}}</span>
-      <div class="order-actions">
-        <button class="btn-icon" @click.stop="editOrder(o)">✏️</button>
-        <button class="btn-icon" @click.stop="confirmDeleteOrder(o)">🗑️</button>
-      </div>
-    </div>
-    <button class="btn btn-primary w-full mt-md" @click="addOrder">＋ 新增订单</button>
+    </details>
   </div>
+  <button class="btn btn-primary w-full" @click="addDailyTask">＋ 新增任务</button>
+</section>
 
-  <!-- Tools Sub-page -->
-  <div v-show="currentSubTab==='tools'">
-    <div class="tool-grid">
-      <div v-for="t in tools" :key="t.id" class="tool-card glass">
-        <a :href="t.url" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;align-items:center;gap:8px;width:100%">
-          <div class="tool-icon">{{t.icon||'🔗'}}</div>
-          <div class="tool-name">{{t.title}}</div>
-          <div class="tool-url">{{t.url}}</div>
-        </a>
-        <div class="tool-actions">
-          <button class="btn-icon" @click.stop="editTool(t)" style="width:26px;height:26px;font-size:12px">✏️</button>
-          <button class="btn-icon" @click.stop="deleteTool(t)" style="width:26px;height:26px;font-size:12px">🗑️</button>
-        </div>
-      </div>
+<!-- ========== INSPIRATION ========== -->
+<section class="page" v-show="currentPage==='inspiration'">
+  <div style="font-size:20px;font-weight:700;color:var(--text-dark);margin-bottom:12px">💡 灵感存档</div>
+  <div class="section-title">🔥 热门选题</div>
+  <div class="hot-topic glass" v-for="topic in hotTopics" :key="topic" @click="useHotTopic(topic)">{{topic}}</div>
+  <button class="btn btn-sm btn-outline mb-md" @click="refreshHotTopics">🔄 换一批</button>
+  <div class="section-title">我的灵感</div>
+  <div class="inspiration-grid">
+    <div v-if="inspirations.length===0" class="empty-state" style="grid-column:1/-1"><div class="empty-icon">💡</div><div class="empty-text">还没有灵感记录</div></div>
+    <div v-for="item in inspirations" :key="item.id" class="inspiration-card glass clickable" @click="editInspiration(item)">
+      <div style="font-size:14px;font-weight:600;color:var(--text-dark);margin-bottom:4px">{{item.title}}</div>
+      <div class="card-body">{{item.content}}</div>
+      <div class="inspiration-tags"><span class="inspiration-tag" v-for="tag in item.tags" :key="tag">{{tag}}</span></div>
+      <div style="font-size:10px;color:var(--text-lighter);margin-top:4px">{{item.date}}</div>
     </div>
-    <button class="btn btn-primary w-full mt-md" @click="addTool">＋ 添加网址</button>
+  </div>
+  <button class="btn btn-primary w-full mt-md" @click="addInspiration">＋ 添加灵感</button>
+</section>
 
-    <div class="card glass mt-md">
-      <div class="card-header"><div class="card-title">⚙️ 数据管理</div></div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn btn-outline" @click="exportData">📤 导出数据</button>
-        <button class="btn btn-outline" @click="importDataPrompt">📥 导入数据</button>
-        <button class="btn btn-danger" @click="confirmClearAll">🗑️ 清除全部数据</button>
-      </div>
-      <input type="file" ref="importFile" accept=".json" style="display:none" @change="importData">
-      <div style="margin-top:12px;font-size:11px;color:var(--text-lighter)">导出数据可备份到电脑，换设备时导入即可恢复</div>
+<!-- ========== SUMMARY ========== -->
+<section class="page" v-show="currentPage==='summary'">
+  <div style="font-size:20px;font-weight:700;color:var(--text-dark);margin-bottom:12px">📝 每日总结</div>
+  <div v-if="summaries.length===0" class="empty-state"><div class="empty-icon">📝</div><div class="empty-text">还没有总结</div></div>
+  <div v-for="s in summaries" :key="s.id" class="card glass clickable" @click="editSummary(s)">
+    <div class="flex-between" style="margin-bottom:6px"><span style="font-size:13px;font-weight:600">{{s.date}}</span><span style="font-size:24px">{{s.mood}}</span></div>
+    <div style="font-size:13px;color:var(--text-light);white-space:pre-wrap">{{s.content}}</div>
+    <div class="summary-images" v-if="s.images&&s.images.length>0">
+      <img class="summary-img" v-for="(img,i) in s.images" :key="i" :src="img" @click.stop="previewImage(img)">
+    </div>
+  </div>
+  <button class="btn btn-primary w-full mt-md" @click="addSummary">＋ 写今日总结</button>
+</section>
+
+<!-- ========== INCOME ========== -->
+<section class="page" v-show="currentPage==='income'">
+  <div style="font-size:20px;font-weight:700;color:var(--text-dark);margin-bottom:12px">💰 收入记账</div>
+  <div class="income-summary glass">
+    <div style="font-size:12px;color:var(--text-light);margin-bottom:2px">{{currentMonth}}月总收入</div>
+    <div class="income-total">¥{{monthlyIncome.toFixed(2)}}</div>
+    <div style="font-size:10px;color:var(--text-lighter)">{{incomes.length}}条记录</div>
+  </div>
+  <div class="card glass" style="overflow-x:auto">
+    <table class="income-table" v-if="incomes.length>0">
+      <thead><tr><th>日期</th><th>项目</th><th>金额</th><th>备注</th><th></th></tr></thead>
+      <tbody><tr v-for="item in sortedIncomes" :key="item.id" @click="editIncome(item)" style="cursor:pointer">
+        <td>{{item.date}}</td><td>{{item.project}}</td>
+        <td class="income-amount">¥{{item.amount.toFixed(2)}}</td>
+        <td style="font-size:11px;color:var(--text-light)">{{item.notes}}</td>
+        <td><button class="btn btn-xs btn-danger" @click.stop="deleteIncome(item)">删</button></td>
+      </tr></tbody>
+    </table>
+    <div v-else class="empty-state"><div class="empty-icon">💵</div><div class="empty-text">暂无记录</div></div>
+  </div>
+  <button class="btn btn-primary w-full mt-md" @click="addIncome">＋ 记一笔</button>
+</section>
+
+<!-- ========== STUDY ========== -->
+<section class="page" v-show="currentPage==='study'">
+  <div style="font-size:20px;font-weight:700;color:var(--text-dark);margin-bottom:12px">📖 学习备考</div>
+  <div v-if="studyLogs.length===0" class="empty-state"><div class="empty-icon">📚</div><div class="empty-text">还没有学习记录</div></div>
+  <div v-for="log in studyLogs" :key="log.id" class="log-item glass">
+    <div class="log-icon">📖</div><div class="log-info"><div class="log-title">{{log.subject}}</div><div class="log-meta">{{log.date}} · {{log.notes}}</div></div>
+    <div class="log-duration">{{log.durationMinutes}}min</div>
+    <button class="btn-icon" @click="editStudyLog(log)" style="width:28px;height:28px;font-size:12px">✏️</button>
+    <button class="btn-icon" @click="deleteStudyLog(log)" style="width:28px;height:28px;font-size:12px">🗑️</button>
+  </div>
+  <button class="btn btn-primary w-full mt-md" @click="addStudyLog">＋ 添加学习</button>
+</section>
+
+<!-- ========== READING ========== -->
+<section class="page" v-show="currentPage==='reading'">
+  <div style="font-size:20px;font-weight:700;color:var(--text-dark);margin-bottom:12px">📕 读书记录</div>
+  <div v-if="readingLogs.length===0" class="empty-state"><div class="empty-icon">📖</div><div class="empty-text">还没有读书记录</div></div>
+  <div v-for="log in readingLogs" :key="log.id" class="log-item glass">
+    <div class="log-icon">📕</div><div class="log-info"><div class="log-title">{{log.bookTitle}}</div><div class="log-meta">{{log.date}} · {{log.author}} · {{log.notes}}</div></div>
+    <div class="log-duration">{{log.pages}}页</div>
+    <button class="btn-icon" @click="editReadingLog(log)" style="width:28px;height:28px;font-size:12px">✏️</button>
+    <button class="btn-icon" @click="deleteReadingLog(log)" style="width:28px;height:28px;font-size:12px">🗑️</button>
+  </div>
+  <button class="btn btn-primary w-full mt-md" @click="addReadingLog">＋ 添加读书</button>
+</section>
+
+<!-- ========== EXERCISE ========== -->
+<section class="page" v-show="currentPage==='exercise'">
+  <div style="font-size:20px;font-weight:700;color:var(--text-dark);margin-bottom:12px">🏃 运动记录</div>
+  <div v-if="exerciseLogs.length===0" class="empty-state"><div class="empty-icon">🏃</div><div class="empty-text">还没有运动记录</div></div>
+  <div v-for="log in exerciseLogs" :key="log.id" class="log-item glass">
+    <div class="log-icon">{{log.type==='shoulder_stretch'?'🧘':log.type==='muscle_building'?'💪':'🏃'}}</div>
+    <div class="log-info"><div class="log-title">{{log.type==='shoulder_stretch'?'肩颈拉伸':log.type==='muscle_building'?'增肌塑形':log.customType||'运动'}}</div><div class="log-meta">{{log.date}} · {{log.exercises||''}}</div></div>
+    <div class="log-duration">{{log.durationMinutes}}min</div>
+    <button class="btn-icon" @click="editExerciseLog(log)" style="width:28px;height:28px;font-size:12px">✏️</button>
+    <button class="btn-icon" @click="deleteExerciseLog(log)" style="width:28px;height:28px;font-size:12px">🗑️</button>
+  </div>
+  <button class="btn btn-primary w-full mt-md" @click="addExerciseLog">＋ 添加运动</button>
+</section>
+
+<!-- ========== SETTINGS ========== -->
+<section class="page" v-show="currentPage==='settings'">
+  <div style="font-size:20px;font-weight:700;color:var(--text-dark);margin-bottom:16px">⚙️ 数据管理</div>
+  <div class="card glass">
+    <div class="card-header"><div class="card-title">💾 数据备份</div></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-outline" @click="exportData">📤 导出备份</button>
+      <button class="btn btn-outline" @click="importDataPrompt">📥 导入恢复</button>
+      <button class="btn btn-danger" @click="confirmClearAll">🗑️ 清除数据</button>
+    </div>
+    <input type="file" ref="importFile" accept=".json" style="display:none" @change="importData">
+    <div style="margin-top:12px;font-size:11px;color:var(--text-lighter)">建议定期导出备份。换设备或清浏览器数据前务必导出！</div>
+    <div style="margin-top:4px;font-size:10px;color:var(--text-lighter)">
+      数据：{{orders.length}}订单 · {{douyinVideos.length}}作品 · {{incomes.length}}收入 · {{summaries.length}}总结 · {{inspirations.length}}灵感
     </div>
   </div>
 </section>
 
 </main>
-
-<!-- ===== BOTTOM NAV (MOBILE) ===== -->
-<nav class="bottom-nav" v-if="!isDesktop">
-  <button class="nav-btn" :class="{active:currentTab==='home'}" @click="switchTab('home')">
-    <span class="nav-icon">🏠</span><span class="nav-label">首页</span>
-  </button>
-  <button class="nav-btn" :class="{active:currentTab==='plan'}" @click="switchTab('plan')">
-    <span class="nav-icon">✅</span><span class="nav-label">计划</span>
-  </button>
-  <button class="nav-btn" :class="{active:currentTab==='record'}" @click="switchTab('record')">
-    <span class="nav-icon">📝</span><span class="nav-label">记录</span>
-  </button>
-  <button class="nav-btn" :class="{active:currentTab==='health'}" @click="switchTab('health')">
-    <span class="nav-icon">❤️</span><span class="nav-label">健康</span>
-  </button>
-  <button class="nav-btn" :class="{active:currentTab==='my'}" @click="switchTab('my')">
-    <span class="nav-icon">📦</span><span class="nav-label">管理</span>
-  </button>
-</nav>
 
 <!-- ===== MODAL ===== -->
 <div class="modal-overlay" v-if="modal.show" @click.self="closeModal">
@@ -963,51 +847,54 @@ img{max-width:100%;display:block}
       <button class="modal-close" @click="closeModal">✕</button>
     </div>
     <div class="modal-body">
-      <!-- Order Form -->
+      <template v-if="modal.type==='douyinVideo'">
+        <div class="form-group"><label class="form-label">作品标题</label><input class="form-input" v-model="modal.data.title" placeholder="如：探店vlog第3期"></div>
+        <div class="form-group"><label class="form-label">作品链接</label><input class="form-input" v-model="modal.data.url" placeholder="https://...（可选）"></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">播放量</label><input class="form-input" type="number" v-model.number="modal.data.views" placeholder="0"></div>
+          <div class="form-group"><label class="form-label">点赞</label><input class="form-input" type="number" v-model.number="modal.data.likes" placeholder="0"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">评论</label><input class="form-input" type="number" v-model.number="modal.data.comments" placeholder="0"></div>
+          <div class="form-group"><label class="form-label">转发</label><input class="form-input" type="number" v-model.number="modal.data.shares" placeholder="0"></div>
+        </div>
+        <div class="form-group"><label class="form-label">发布日期</label><input class="form-input" type="date" v-model="modal.data.date"></div>
+        <div class="form-group"><label class="form-label">备注</label><input class="form-input" v-model="modal.data.notes" placeholder="可选"></div>
+      </template>
       <template v-if="modal.type==='order'">
         <div class="form-group"><label class="form-label">订单标题</label><input class="form-input" v-model="modal.data.title" placeholder="如：Logo设计"></div>
         <div class="form-group"><label class="form-label">客户名称</label><input class="form-input" v-model="modal.data.customer" placeholder="客户姓名或公司名"></div>
         <div class="form-row">
-          <div class="form-group"><label class="form-label">金额 (¥)</label><input class="form-input" type="number" v-model.number="modal.data.amount" placeholder="0"></div>
+          <div class="form-group"><label class="form-label">金额 ¥</label><input class="form-input" type="number" v-model.number="modal.data.amount" placeholder="0"></div>
           <div class="form-group"><label class="form-label">状态</label><select class="form-select" v-model="modal.data.status"><option value="pending">待处理</option><option value="done">已完成</option></select></div>
         </div>
         <div class="form-group"><label class="form-label">日期</label><input class="form-input" type="date" v-model="modal.data.date"></div>
-        <div class="form-group"><label class="form-label">备注</label><textarea class="form-textarea" v-model="modal.data.notes" placeholder="可选备注信息" rows="2"></textarea></div>
+        <div class="form-group"><label class="form-label">备注</label><textarea class="form-textarea" v-model="modal.data.notes" rows="2" placeholder="可选"></textarea></div>
       </template>
-
-      <!-- Tool Form -->
       <template v-if="modal.type==='tool'">
-        <div class="form-group"><label class="form-label">网站名称</label><input class="form-input" v-model="modal.data.title" placeholder="如：欧路词典"></div>
+        <div class="form-group"><label class="form-label">名称</label><input class="form-input" v-model="modal.data.title" placeholder="如：欧路词典"></div>
         <div class="form-group"><label class="form-label">网址</label><input class="form-input" v-model="modal.data.url" placeholder="https://..."></div>
-        <div class="form-group"><label class="form-label">图标 (Emoji)</label><input class="form-input" v-model="modal.data.icon" placeholder="如：📖"></div>
+        <div class="form-group"><label class="form-label">图标 Emoji</label><input class="form-input" v-model="modal.data.icon" placeholder="如：📖"></div>
         <div class="form-group"><label class="form-label">分类</label><select class="form-select" v-model="modal.data.category"><option value="social">社交媒体</option><option value="ai">AI工具</option><option value="english">英语学习</option><option value="other">其他</option></select></div>
       </template>
-
-      <!-- Habit Form -->
       <template v-if="modal.type==='habit'">
         <div class="form-group"><label class="form-label">习惯名称</label><input class="form-input" v-model="modal.data.name" placeholder="如：喝水提醒"></div>
         <div class="form-group"><label class="form-label">图标</label><input class="form-input" v-model="modal.data.icon" placeholder="如：💧"></div>
-        <div class="form-group"><label class="form-label">提醒间隔 (分钟)</label><input class="form-input" type="number" v-model.number="modal.data.intervalMinutes" placeholder="30"></div>
+        <div class="form-group"><label class="form-label">间隔(分钟)</label><input class="form-input" type="number" v-model.number="modal.data.intervalMinutes" placeholder="30"></div>
         <div class="form-group"><label class="form-label">描述</label><input class="form-input" v-model="modal.data.description" placeholder="简短描述"></div>
       </template>
-
-      <!-- Daily Task Form -->
       <template v-if="modal.type==='dailyTask'">
         <div class="form-group"><label class="form-label">任务名称</label><input class="form-input" v-model="modal.data.task" placeholder="任务内容"></div>
         <div class="form-group"><label class="form-label">时间</label><input class="form-input" type="time" v-model="modal.data.time"></div>
       </template>
-
-      <!-- Inspiration Form -->
       <template v-if="modal.type==='inspiration'">
         <div class="form-group"><label class="form-label">标题</label><input class="form-input" v-model="modal.data.title" placeholder="灵感标题"></div>
-        <div class="form-group"><label class="form-label">内容</label><textarea class="form-textarea" v-model="modal.data.content" placeholder="记录你的灵感..." rows="4"></textarea></div>
-        <div class="form-group"><label class="form-label">标签（逗号分隔）</label><input class="form-input" v-model="modal.data.tagsStr" placeholder="如：剪辑, 转场, BGM"></div>
+        <div class="form-group"><label class="form-label">内容</label><textarea class="form-textarea" v-model="modal.data.content" rows="4" placeholder="记录灵感..."></textarea></div>
+        <div class="form-group"><label class="form-label">标签(逗号分隔)</label><input class="form-input" v-model="modal.data.tagsStr" placeholder="如：剪辑,转场,BGM"></div>
       </template>
-
-      <!-- Summary Form -->
       <template v-if="modal.type==='summary'">
         <div class="form-group"><label class="form-label">日期</label><input class="form-input" type="date" v-model="modal.data.date"></div>
-        <div class="form-group"><label class="form-label">今日心情</label>
+        <div class="form-group"><label class="form-label">心情</label>
           <div class="mood-selector">
             <button class="mood-option" :class="{selected:modal.data.mood==='😊'}" @click="modal.data.mood='😊'">😊</button>
             <button class="mood-option" :class="{selected:modal.data.mood==='😌'}" @click="modal.data.mood='😌'">😌</button>
@@ -1016,49 +903,40 @@ img{max-width:100%;display:block}
             <button class="mood-option" :class="{selected:modal.data.mood==='😡'}" @click="modal.data.mood='😡'">😡</button>
           </div>
         </div>
-        <div class="form-group"><label class="form-label">今日总结</label><textarea class="form-textarea" v-model="modal.data.content" placeholder="今天发生了什么..." rows="5"></textarea></div>
+        <div class="form-group"><label class="form-label">内容</label><textarea class="form-textarea" v-model="modal.data.content" rows="5" placeholder="今天发生了什么..."></textarea></div>
         <div class="form-group"><label class="form-label">图片</label>
           <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">
-            <img v-for="(img,i) in modal.data.images" :key="i" :src="img" class="summary-img" style="position:relative">
+            <img v-for="(img,i) in modal.data.images" :key="i" :src="img" class="summary-img">
             <button class="img-upload-btn" @click="pickImage">＋</button>
             <input type="file" ref="imageInput" accept="image/*" style="display:none" @change="onImagePicked">
           </div>
-          <button v-if="modal.data.images.length>0" class="btn btn-sm btn-danger mt-sm" @click="modal.data.images=[]">清除图片</button>
         </div>
       </template>
-
-      <!-- Income Form -->
       <template v-if="modal.type==='income'">
         <div class="form-group"><label class="form-label">日期</label><input class="form-input" type="date" v-model="modal.data.date"></div>
-        <div class="form-group"><label class="form-label">收入项目</label><input class="form-input" v-model="modal.data.project" placeholder="如：视频剪辑"></div>
-        <div class="form-group"><label class="form-label">金额 (¥)</label><input class="form-input" type="number" v-model.number="modal.data.amount" placeholder="0.00" step="0.01"></div>
+        <div class="form-group"><label class="form-label">项目</label><input class="form-input" v-model="modal.data.project" placeholder="如：视频剪辑"></div>
+        <div class="form-group"><label class="form-label">金额 ¥</label><input class="form-input" type="number" v-model.number="modal.data.amount" placeholder="0.00" step="0.01"></div>
         <div class="form-group"><label class="form-label">备注</label><input class="form-input" v-model="modal.data.notes" placeholder="可选"></div>
       </template>
-
-      <!-- Study Log Form -->
       <template v-if="modal.type==='studyLog'">
         <div class="form-group"><label class="form-label">日期</label><input class="form-input" type="date" v-model="modal.data.date"></div>
-        <div class="form-group"><label class="form-label">学习科目</label><input class="form-input" v-model="modal.data.subject" placeholder="如：英语四级"></div>
-        <div class="form-group"><label class="form-label">时长 (分钟)</label><input class="form-input" type="number" v-model.number="modal.data.durationMinutes" placeholder="60"></div>
-        <div class="form-group"><label class="form-label">备注</label><input class="form-input" v-model="modal.data.notes" placeholder="学习内容简述"></div>
+        <div class="form-group"><label class="form-label">科目</label><input class="form-input" v-model="modal.data.subject" placeholder="如：英语四级"></div>
+        <div class="form-group"><label class="form-label">时长(分钟)</label><input class="form-input" type="number" v-model.number="modal.data.durationMinutes" placeholder="60"></div>
+        <div class="form-group"><label class="form-label">备注</label><input class="form-input" v-model="modal.data.notes" placeholder="学习内容"></div>
       </template>
-
-      <!-- Reading Log Form -->
       <template v-if="modal.type==='readingLog'">
         <div class="form-group"><label class="form-label">日期</label><input class="form-input" type="date" v-model="modal.data.date"></div>
         <div class="form-group"><label class="form-label">书名</label><input class="form-input" v-model="modal.data.bookTitle" placeholder="书名"></div>
         <div class="form-group"><label class="form-label">作者</label><input class="form-input" v-model="modal.data.author" placeholder="作者"></div>
-        <div class="form-group"><label class="form-label">阅读页数</label><input class="form-input" type="number" v-model.number="modal.data.pages" placeholder="0"></div>
-        <div class="form-group"><label class="form-label">笔记</label><input class="form-input" v-model="modal.data.notes" placeholder="读后感或摘抄"></div>
+        <div class="form-group"><label class="form-label">页数</label><input class="form-input" type="number" v-model.number="modal.data.pages" placeholder="0"></div>
+        <div class="form-group"><label class="form-label">笔记</label><input class="form-input" v-model="modal.data.notes" placeholder="读后感"></div>
       </template>
-
-      <!-- Exercise Log Form -->
       <template v-if="modal.type==='exerciseLog'">
         <div class="form-group"><label class="form-label">日期</label><input class="form-input" type="date" v-model="modal.data.date"></div>
-        <div class="form-group"><label class="form-label">运动类型</label><select class="form-select" v-model="modal.data.type"><option value="shoulder_stretch">肩颈拉伸</option><option value="muscle_building">增肌塑形</option><option value="other">其他</option></select></div>
-        <div class="form-group" v-if="modal.data.type==='other'"><label class="form-label">自定义类型</label><input class="form-input" v-model="modal.data.customType" placeholder="如：跑步"></div>
-        <div class="form-group"><label class="form-label">时长 (分钟)</label><input class="form-input" type="number" v-model.number="modal.data.durationMinutes" placeholder="30"></div>
-        <div class="form-group"><label class="form-label">运动内容</label><input class="form-input" v-model="modal.data.exercises" placeholder="如：平板支撑3组+卷腹3组"></div>
+        <div class="form-group"><label class="form-label">类型</label><select class="form-select" v-model="modal.data.type"><option value="shoulder_stretch">肩颈拉伸</option><option value="muscle_building">增肌塑形</option><option value="other">其他</option></select></div>
+        <div class="form-group" v-if="modal.data.type==='other'"><label class="form-label">自定义</label><input class="form-input" v-model="modal.data.customType" placeholder="如：跑步"></div>
+        <div class="form-group"><label class="form-label">时长(分钟)</label><input class="form-input" type="number" v-model.number="modal.data.durationMinutes" placeholder="30"></div>
+        <div class="form-group"><label class="form-label">内容</label><input class="form-input" v-model="modal.data.exercises" placeholder="如：平板支撑3组"></div>
       </template>
     </div>
     <div class="modal-footer">
@@ -1068,22 +946,20 @@ img{max-width:100%;display:block}
   </div>
 </div>
 
-<!-- ===== CONFIRM DIALOG ===== -->
+<!-- ===== CONFIRM ===== -->
 <div class="confirm-overlay" v-if="confirm.show" @click.self="confirm.show=false">
   <div class="confirm-box">
-    <div style="font-size:32px;margin-bottom:10px">{{confirm.icon||'⚠️'}}</div>
+    <div style="font-size:32px;margin-bottom:8px">{{confirm.icon||'⚠️'}}</div>
     <div class="confirm-text">{{confirm.message}}</div>
     <div class="confirm-buttons">
-      <button class="btn btn-outline" @click="confirm.show=false;confirm.onCancel&&confirm.onCancel()">取消</button>
+      <button class="btn btn-outline" @click="confirm.show=false">取消</button>
       <button class="btn" :class="confirm.danger?'btn-danger':'btn-primary'" @click="confirm.onOk();confirm.show=false">{{confirm.okText||'确认'}}</button>
     </div>
   </div>
 </div>
 
 <!-- ===== TOAST ===== -->
-<div class="toast-container">
-  <div class="toast" v-for="(t,i) in toasts" :key="i" :class="'toast-'+t.type">{{t.message}}</div>
-</div>
+<div class="toast-container"><div class="toast" v-for="(t,i) in toasts" :key="i" :class="'toast-'+t.type">{{t.message}}</div></div>
 
 <!-- ===== IMAGE PREVIEW ===== -->
 <div class="confirm-overlay" v-if="imagePreview" @click="imagePreview=null">
@@ -1094,45 +970,31 @@ img{max-width:100%;display:block}
 
 <script src="https://cdn.jsdelivr.net/npm/vue@3.4.0/dist/vue.global.prod.js"></script>
 <script>
-// ===== DATA HELPERS =====
-const DB_PREFIX = 'db_';
-function load(key, defaultVal) {
-  try { const v = localStorage.getItem(DB_PREFIX + key); return v ? JSON.parse(v) : defaultVal; }
-  catch(e) { return defaultVal; }
-}
-function save(key, val) { localStorage.setItem(DB_PREFIX + key, JSON.stringify(val)); }
+const DB_PREFIX='db_';
+function load(k,d){try{let v=localStorage.getItem(DB_PREFIX+k);return v?JSON.parse(v):d}catch(e){return d}}
+function save(k,v){localStorage.setItem(DB_PREFIX+k,JSON.stringify(v))}
+function uid(){return 'id_'+Date.now()+'_'+Math.random().toString(36).slice(2,8)}
+function today(){return new Date().toISOString().slice(0,10)}
+function now(){const d=new Date();return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0')}
 
-function uid() { return 'id_' + Date.now() + '_' + Math.random().toString(36).slice(2,8); }
-function today() { return new Date().toISOString().slice(0,10); }
-function now() { const d=new Date(); return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0'); }
-
-// ===== PRESET DATA =====
-const PRESET_TOOLS = [
-  { id: uid(), title: '小红书', url: 'https://www.xiaohongshu.com', icon: '📕', category: 'social' },
-  { id: uid(), title: 'Pinterest', url: 'https://www.pinterest.com', icon: '📌', category: 'social' },
-  { id: uid(), title: 'Instagram', url: 'https://www.instagram.com', icon: '📷', category: 'social' },
-  { id: uid(), title: 'ChatGPT', url: 'https://chat.openai.com', icon: '🤖', category: 'ai' },
+const PRESET_TOOLS=[
+  {id:uid(),title:'小红书',url:'https://www.xiaohongshu.com',icon:'📕',category:'social'},
+  {id:uid(),title:'Pinterest',url:'https://www.pinterest.com',icon:'📌',category:'social'},
+  {id:uid(),title:'Instagram',url:'https://www.instagram.com',icon:'📷',category:'social'},
+  {id:uid(),title:'ChatGPT',url:'https://chat.openai.com',icon:'🤖',category:'ai'},
 ];
-
-const PRESET_HABITS = [
-  { id: uid(), name: '喝水提醒', icon: '💧', intervalMinutes: 30, enabled: true, description: '每隔半小时提醒喝水' },
-  { id: uid(), name: '护眼休息', icon: '👁️', intervalMinutes: 60, enabled: true, description: '每工作1小时休息眼睛' },
-  { id: uid(), name: '久坐提醒', icon: '🪑', intervalMinutes: 45, enabled: false, description: '起身活动一下' },
-  { id: uid(), name: '肩颈拉伸', icon: '🧘', intervalMinutes: 90, enabled: false, description: '做一组肩颈放松运动' },
+const PRESET_HABITS=[
+  {id:uid(),name:'喝水提醒',icon:'💧',intervalMinutes:30,enabled:true,description:'每隔半小时提醒喝水'},
+  {id:uid(),name:'护眼休息',icon:'👁️',intervalMinutes:60,enabled:true,description:'每工作1小时休息眼睛'},
+  {id:uid(),name:'久坐提醒',icon:'🪑',intervalMinutes:45,enabled:false,description:'起身活动一下'},
+  {id:uid(),name:'肩颈拉伸',icon:'🧘',intervalMinutes:90,enabled:false,description:'做一组肩颈放松运动'},
 ];
-
-const PRESET_TASKS = [
-  { task: '吃健康早餐', time: '07:30' },
-  { task: '练习八段锦', time: '08:00' },
-  { task: '阅读课外书', time: '09:00' },
-  { task: '备考', time: '10:00' },
-  { task: '练字', time: '14:00' },
-  { task: '运动', time: '17:00' },
-  { task: '护肤', time: '21:00' },
+const PRESET_TASKS=[
+  {task:'吃健康早餐',time:'07:30'},{task:'练习八段锦',time:'08:00'},{task:'阅读课外书',time:'09:00'},
+  {task:'备考',time:'10:00'},{task:'练字',time:'14:00'},{task:'运动',time:'17:00'},{task:'护肤',time:'21:00'},
 ];
-
-const HOT_TOPICS_POOL = [
-  '🔥「1个技巧让你的视频播放量翻倍」— 黄金3秒开头公式',
+const HOT_TOPICS_POOL=[
+  '🔥「1个技巧让视频播放量翻倍」— 黄金3秒开头公式',
   '🎬「剪辑师必学的5种转场手法」— 无缝转场教程合集',
   '📱「2025短视频趋势预测」— 这5个赛道最有潜力',
   '💡「如何用AI辅助视频剪辑」— 效率提升10倍的秘诀',
@@ -1144,618 +1006,210 @@ const HOT_TOPICS_POOL = [
   '📊「数据分析驱动内容创作」— 用数据找到爆款方向',
 ];
 
-// ===== VUE APP =====
-const app = Vue.createApp({
-  data() {
-    return {
-      currentTab: 'home',
-      currentSubTab: 'daily-plan',
-      isDesktop: window.innerWidth > 768,
-      userName: '',
-      orderFilter: 'all',
-
-      // Data stores
-      orders: [],
-      tools: [],
-      habits: [],
-      habitLogs: [],
-      dailyTasks: [],
-      inspirations: [],
-      summaries: [],
-      incomes: [],
-      studyLogs: [],
-      readingLogs: [],
-      exerciseLogs: [],
-      hotTopics: [],
-
-      // Modal
-      modal: { show: false, type: '', title: '', data: {}, saveCallback: null },
-
-      // Confirm
-      confirm: { show: false, message: '', icon: '', okText: '确认', danger: false, onOk: ()=>{}, onCancel: null },
-
-      // Toast
-      toasts: [],
-
-      // Image preview
-      imagePreview: null,
-
-      // Reminder intervals
-      reminderTimers: [],
-      lastReminderTime: {},
-
-      // Daily exercise
-      exerciseDoneToday: false,
+const app=Vue.createApp({
+  data(){
+    return{
+      currentPage:'home',
+      drawerOpen:false,
+      orderFilter:'all',
+      orders:[],tools:[],habits:[],habitLogs:[],dailyTasks:[],
+      inspirations:[],summaries:[],incomes:[],
+      studyLogs:[],readingLogs:[],exerciseLogs:[],
+      douyinVideos:[],
+      hotTopics:[],
+      modal:{show:false,type:'',title:'',data:{}},
+      confirm:{show:false,message:'',icon:'⚠️',okText:'确认',danger:false,onOk:()=>{}},
+      toasts:[],imagePreview:null,
+      reminderTimers:[],lastReminderTime:{},
     }
   },
-
-  computed: {
-    greeting() {
-      const h = new Date().getHours();
-      if (h < 6) return '夜深了 🌙';
-      if (h < 9) return '早上好 ☀️';
-      if (h < 12) return '上午好 🌤️';
-      if (h < 14) return '中午好 ☀️';
-      if (h < 18) return '下午好 🌈';
-      return '晚上好 🌙';
+  computed:{
+    pageTitle(){
+      const m={'home':'数据看板','douyin':'抖音数据','orders':'订单管理','tools':'工具导航','health':'习惯打卡','daily':'每日计划','inspiration':'灵感存档','summary':'每日总结','income':'收入记账','study':'学习备考','reading':'读书记录','exercise':'运动记录','settings':'数据管理'};
+      return m[this.currentPage]||'工作台';
     },
-    todayDate() {
-      const d = new Date();
-      return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日 星期${'日一二三四五六'[d.getDay()]}`;
-    },
-    currentMonth() { return new Date().getMonth() + 1; },
-    todayTaskCount() {
-      return this.dailyTasks.filter(t => t.date === today() && !t.completed).length;
-    },
-    todayIncome() {
-      return this.incomes.filter(i => i.date === today()).reduce((s, i) => s + (i.amount||0), 0);
-    },
-    monthlyIncome() {
-      const m = today().slice(0,7);
-      return this.incomes.filter(i => i.date && i.date.startsWith(m)).reduce((s, i) => s + (i.amount||0), 0);
-    },
-    enabledHabitsCount() { return this.habits.filter(h => h.enabled).length; },
-    todayHabitDone() {
-      return this.habitLogs.filter(l => l.date === today() && l.done).length;
-    },
-    todayStudyMin() {
-      return this.studyLogs.filter(l => l.date === today()).reduce((s,l) => s + (l.durationMinutes||0), 0);
-    },
-    todayWaterCount() {
-      return this.habitLogs.filter(l => l.date===today() && l.habitId && this.getHabitById(l.habitId)?.name?.includes('喝水')).length;
-    },
-    todayStretchCount() {
-      return this.habitLogs.filter(l => l.date===today() && l.habitId && (this.getHabitById(l.habitId)?.name?.includes('拉伸')||this.getHabitById(l.habitId)?.name?.includes('肩颈'))).length;
-    },
-    todayEyeCount() {
-      return this.habitLogs.filter(l => l.date===today() && l.habitId && this.getHabitById(l.habitId)?.name?.includes('护眼')).length;
-    },
-    recentOrders() {
-      return [...this.orders].sort((a,b) => b.createdAt - a.createdAt).slice(0,3);
-    },
-    recentSummaries() {
-      return [...this.summaries].sort((a,b) => b.date.localeCompare(a.date)).slice(0,3);
-    },
-    sortedDailyTasks() {
-      return [...this.dailyTasks].filter(t => t.date === today()).sort((a,b) => a.time.localeCompare(b.time));
-    },
-    sortedIncomes() {
-      return [...this.incomes].sort((a,b) => b.date.localeCompare(a.date));
-    },
-    filteredOrders() {
-      if (this.orderFilter === 'all') return [...this.orders].sort((a,b) => b.createdAt - a.createdAt);
-      return [...this.orders].filter(o => o.status === this.orderFilter).sort((a,b) => b.createdAt - a.createdAt);
+    greeting(){const h=new Date().getHours();if(h<6)return'夜深了🌙';if(h<9)return'早上好☀️';if(h<12)return'上午好🌤️';if(h<14)return'中午好☀️';if(h<18)return'下午好🌈';return'晚上好🌙';},
+    todayDate(){const d=new Date();return d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日 星期'+'日一二三四五六'[d.getDay()];},
+    currentMonth(){return new Date().getMonth()+1;},
+    todayTaskCount(){return this.dailyTasks.filter(t=>t.date===today()&&!t.completed).length;},
+    todayIncome(){return this.incomes.filter(i=>i.date===today()).reduce((s,i)=>s+(i.amount||0),0);},
+    monthlyIncome(){const m=today().slice(0,7);return this.incomes.filter(i=>i.date&&i.date.startsWith(m)).reduce((s,i)=>s+(i.amount||0),0);},
+    enabledHabitsCount(){return this.habits.filter(h=>h.enabled).length;},
+    todayHabitDone(){return this.habitLogs.filter(l=>l.date===today()&&l.done).length;},
+    todayStudyMin(){return this.studyLogs.filter(l=>l.date===today()).reduce((s,l)=>s+(l.durationMinutes||0),0);},
+    todayWaterCount(){return this.habitLogs.filter(l=>l.date===today()&&l.habitId&&this.getHabitById(l.habitId)?.name?.includes('喝水')).length;},
+    todayStretchCount(){return this.habitLogs.filter(l=>l.date===today()&&l.habitId&&(this.getHabitById(l.habitId)?.name?.includes('拉伸')||this.getHabitById(l.habitId)?.name?.includes('肩颈'))).length;},
+    todayEyeCount(){return this.habitLogs.filter(l=>l.date===today()&&l.habitId&&this.getHabitById(l.habitId)?.name?.includes('护眼')).length;},
+    totalDouyinViews(){return this.douyinVideos.reduce((s,v)=>s+(v.views||0),0);},
+    totalDouyinLikes(){return this.douyinVideos.reduce((s,v)=>s+(v.likes||0),0);},
+    totalDouyinComments(){return this.douyinVideos.reduce((s,v)=>s+(v.comments||0),0);},
+    totalDouyinShares(){return this.douyinVideos.reduce((s,v)=>s+(v.shares||0),0);},
+    recentVideos(){return [...this.douyinVideos].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);},
+    sortedDouyinVideos(){return [...this.douyinVideos].sort((a,b)=>b.date.localeCompare(a.date));},
+    sortedDailyTasks(){return [...this.dailyTasks].filter(t=>t.date===today()).sort((a,b)=>a.time.localeCompare(b.time));},
+    sortedIncomes(){return [...this.incomes].sort((a,b)=>b.date.localeCompare(a.date));},
+    filteredOrders(){
+      if(this.orderFilter==='all')return[...this.orders].sort((a,b)=>b.createdAt-a.createdAt);
+      return [...this.orders].filter(o=>o.status===this.orderFilter).sort((a,b)=>b.createdAt-a.createdAt);
     },
   },
+  methods:{
+    // Navigation
+    toggleDrawer(){this.drawerOpen=!this.drawerOpen;},
+    closeDrawer(){this.drawerOpen=false;},
+    navigateTo(page){this.currentPage=page;},
 
-  methods: {
-    // ===== DATA LOAD/SAVE =====
-    loadAllData() {
-      this.orders = load('orders', []);
-      this.tools = load('tools', []).length ? load('tools', []) : JSON.parse(JSON.stringify(PRESET_TOOLS));
-      this.habits = load('habits', []).length ? load('habits', []) : JSON.parse(JSON.stringify(PRESET_HABITS));
-      this.habitLogs = load('habitLogs', []);
-      this.dailyTasks = load('dailyTasks', []);
-      this.inspirations = load('inspirations', []);
-      this.summaries = load('summaries', []);
-      this.incomes = load('incomes', []);
-      this.studyLogs = load('studyLogs', []);
-      this.readingLogs = load('readingLogs', []);
-      this.exerciseLogs = load('exerciseLogs', []);
-      this.userName = load('userName', '');
-      this.hotTopics = [...HOT_TOPICS_POOL].sort(() => Math.random() - 0.5).slice(0, 5);
-      this.exerciseDoneToday = load('exerciseDoneToday', '') === today();
+    // Helpers
+    formatLargeNum(n){if(!n)return'0';if(n>=10000)return(n/10000).toFixed(1)+'万';if(n>=1000)return(n/1000).toFixed(1)+'k';return n.toLocaleString();},
+    getHabitById(id){return this.habits.find(h=>h.id===id);},
 
-      // Init daily tasks for today if not exist
+    // Data
+    loadAllData(){
+      this.orders=load('orders',[]);
+      this.tools=load('tools',[]).length?load('tools',[]):JSON.parse(JSON.stringify(PRESET_TOOLS));
+      this.habits=load('habits',[]).length?load('habits',[]):JSON.parse(JSON.stringify(PRESET_HABITS));
+      this.habitLogs=load('habitLogs',[]);
+      this.dailyTasks=load('dailyTasks',[]);
+      this.inspirations=load('inspirations',[]);
+      this.summaries=load('summaries',[]);
+      this.incomes=load('incomes',[]);
+      this.studyLogs=load('studyLogs',[]);
+      this.readingLogs=load('readingLogs',[]);
+      this.exerciseLogs=load('exerciseLogs',[]);
+      this.douyinVideos=load('douyinVideos',[]);
+      this.hotTopics=[...HOT_TOPICS_POOL].sort(()=>Math.random()-0.5).slice(0,5);
       this.initDailyTasks();
     },
-
-    initDailyTasks() {
-      const todayStr = today();
-      const hasToday = this.dailyTasks.some(t => t.date === todayStr);
-      if (!hasToday) {
-        PRESET_TASKS.forEach(pt => {
-          this.dailyTasks.push({
-            id: uid(), task: pt.task, time: pt.time,
-            completed: false, date: todayStr, isPreset: true
-          });
-        });
-        save('dailyTasks', this.dailyTasks);
+    initDailyTasks(){
+      const ts=today();
+      if(!this.dailyTasks.some(t=>t.date===ts)){
+        PRESET_TASKS.forEach(pt=>{this.dailyTasks.push({id:uid(),task:pt.task,time:pt.time,completed:false,date:ts,isPreset:true});});
+        save('dailyTasks',this.dailyTasks);
       }
     },
+    persist(key){
+      const m={'orders':this.orders,'tools':this.tools,'habits':this.habits,'habitLogs':this.habitLogs,'dailyTasks':this.dailyTasks,'inspirations':this.inspirations,'summaries':this.summaries,'incomes':this.incomes,'studyLogs':this.studyLogs,'readingLogs':this.readingLogs,'exerciseLogs':this.exerciseLogs,'douyinVideos':this.douyinVideos};
+      if(m[key]!==undefined)save(key,m[key]);
+    },
 
-    persist(key) {
-      const map = {
-        orders: this.orders, tools: this.tools, habits: this.habits,
-        habitLogs: this.habitLogs, dailyTasks: this.dailyTasks,
-        inspirations: this.inspirations, summaries: this.summaries,
-        incomes: this.incomes, studyLogs: this.studyLogs,
-        readingLogs: this.readingLogs, exerciseLogs: this.exerciseLogs,
+    // Toast / Modal / Confirm
+    showToast(msg,type='info'){this.toasts.push({message:msg,type});setTimeout(()=>{this.toasts.shift();},2500);},
+    openModal(type,title,data,cb){this.modal={show:true,type,title,data:JSON.parse(JSON.stringify(data||{})),saveCallback:cb};},
+    closeModal(){this.modal.show=false;},
+    saveModal(){if(this.modal.saveCallback)this.modal.saveCallback(this.modal.data);this.modal.show=false;this.showToast('保存成功','success');},
+    showConfirm(msg,onOk,opts={}){this.confirm={show:true,message:msg,icon:opts.icon||'⚠️',okText:opts.okText||'确认',danger:opts.danger||false,onOk};},
+
+    // Douyin Videos
+    addDouyinVideo(){
+      this.openModal('douyinVideo','录入作品数据',{title:'',url:'',views:0,likes:0,comments:0,shares:0,date:today(),notes:'',createdAt:Date.now()},(data)=>{
+        data.id=uid();data.createdAt=Date.now();
+        this.douyinVideos.push(data);this.persist('douyinVideos');
+      });
+    },
+    editDouyinVideo(v){this.openModal('douyinVideo','编辑作品数据',v,(data)=>{const i=this.douyinVideos.findIndex(x=>x.id===v.id);if(i>=0){data.createdAt=v.createdAt;this.douyinVideos[i]=data;}this.persist('douyinVideos');});},
+    deleteDouyinVideo(v){this.showConfirm('确定删除「'+v.title+'」吗？',()=>{this.douyinVideos=this.douyinVideos.filter(x=>x.id!==v.id);this.persist('douyinVideos');this.showToast('已删除','info');},{danger:true,okText:'删除',icon:'🗑️'});},
+
+    // Orders
+    addOrder(){this.openModal('order','新增订单',{title:'',customer:'',amount:0,status:'pending',date:today(),notes:''},(data)=>{data.id=uid();data.createdAt=Date.now();this.orders.push(data);this.persist('orders');});},
+    editOrder(o){this.openModal('order','编辑订单',o,(data)=>{const i=this.orders.findIndex(x=>x.id===o.id);if(i>=0){data.createdAt=o.createdAt;this.orders[i]=data;}this.persist('orders');});},
+    confirmDeleteOrder(o){this.showConfirm('确定删除「'+o.title+'」吗？',()=>{this.orders=this.orders.filter(x=>x.id!==o.id);this.persist('orders');this.showToast('已删除','info');},{danger:true,okText:'删除',icon:'🗑️'});},
+
+    // Tools
+    addTool(){this.openModal('tool','添加网址',{title:'',url:'https://',icon:'🔗',category:'other'},(data)=>{data.id=uid();data.createdAt=Date.now();this.tools.push(data);this.persist('tools');});},
+    editTool(t){this.openModal('tool','编辑网址',t,(data)=>{const i=this.tools.findIndex(x=>x.id===t.id);if(i>=0)this.tools[i]=data;this.persist('tools');});},
+    deleteTool(t){this.showConfirm('确定删除「'+t.title+'」吗？',()=>{this.tools=this.tools.filter(x=>x.id!==t.id);this.persist('tools');this.showToast('已删除','info');},{danger:true,okText:'删除',icon:'🗑️'});},
+
+    // Habits
+    toggleHabit(h){h.enabled=!h.enabled;this.persist('habits');this.restartReminders();},
+    addHabit(){this.openModal('habit','添加习惯',{name:'',icon:'🔔',intervalMinutes:30,enabled:true,description:''},(data)=>{data.id=uid();this.habits.push(data);this.persist('habits');this.restartReminders();});},
+    editHabit(h){this.openModal('habit','编辑习惯',h,(data)=>{const i=this.habits.findIndex(x=>x.id===h.id);if(i>=0)this.habits[i]=data;this.persist('habits');this.restartReminders();});},
+    drinkWater(){const h=this.habits.find(x=>x.name.includes('喝水'));this.habitLogs.push({id:uid(),habitId:h?h.id:'water',date:today(),time:now(),done:true});this.persist('habitLogs');this.showToast('💧 喝水+1 今日'+this.todayWaterCount+'杯','success');},
+    doStretch(){const h=this.habits.find(x=>x.name.includes('拉伸'));this.habitLogs.push({id:uid(),habitId:h?h.id:'stretch',date:today(),time:now(),done:true});this.persist('habitLogs');this.showToast('🧘 拉伸+1','success');},
+    doEyeRest(){const h=this.habits.find(x=>x.name.includes('护眼'));this.habitLogs.push({id:uid(),habitId:h?h.id:'eye',date:today(),time:now(),done:true});this.persist('habitLogs');this.showToast('👁️ 护眼+1','success');},
+
+    // Reminders
+    initHealthReminders(){this.restartReminders();},
+    restartReminders(){this.reminderTimers.forEach(t=>clearInterval(t));this.reminderTimers=[];this.habits.filter(h=>h.enabled).forEach(h=>{const t=setInterval(()=>{this.sendNotification(h);},h.intervalMinutes*60*1000);this.reminderTimers.push(t);setTimeout(()=>this.sendNotification(h),3000);});},
+    sendNotification(h){const nt=now();if(this.lastReminderTime[h.id]===nt.slice(0,5))return;this.lastReminderTime[h.id]=nt.slice(0,5);if('Notification' in window&&Notification.permission==='granted'){new Notification(h.icon+' '+h.name,{body:h.description||'该'+h.name+'啦！',tag:h.id,requireInteraction:true});}this.showToast(h.icon+' '+h.name+' — '+h.description,'info');},
+    requestNotificationPermission(){if('Notification' in window&&Notification.permission==='default'){Notification.requestPermission().then(p=>{if(p==='granted')this.showToast('桌面通知已开启✅','success');});}},
+
+    // Daily Tasks
+    toggleDailyTask(t){t.completed=!t.completed;this.persist('dailyTasks');},
+    addDailyTask(){this.openModal('dailyTask','新增任务',{task:'',time:'12:00'},(data)=>{data.id=uid();data.completed=false;data.date=today();data.isPreset=false;this.dailyTasks.push(data);this.persist('dailyTasks');});},
+    editDailyTask(t){this.openModal('dailyTask','编辑任务',t,(data)=>{const i=this.dailyTasks.findIndex(x=>x.id===t.id);if(i>=0){data.completed=t.completed;data.date=t.date;data.isPreset=t.isPreset;data.id=t.id;this.dailyTasks[i]=data;}this.persist('dailyTasks');});},
+    deleteDailyTask(t){this.showConfirm('确定删除「'+t.task+'」吗？',()=>{this.dailyTasks=this.dailyTasks.filter(x=>x.id!==t.id);this.persist('dailyTasks');this.showToast('已删除','info');},{danger:true,okText:'删除',icon:'🗑️'});},
+
+    // Inspiration
+    addInspiration(){this.openModal('inspiration','添加灵感',{title:'',content:'',tagsStr:'',tags:[],date:today()},(data)=>{data.id=uid();data.tags=data.tagsStr.split(/[,，]/).map(s=>s.trim()).filter(Boolean);this.inspirations.push(data);this.persist('inspirations');});},
+    editInspiration(item){const d=JSON.parse(JSON.stringify(item));d.tagsStr=(d.tags||[]).join(', ');this.openModal('inspiration','编辑灵感',d,(data)=>{data.tags=data.tagsStr.split(/[,，]/).map(s=>s.trim()).filter(Boolean);const i=this.inspirations.findIndex(x=>x.id===item.id);if(i>=0)this.inspirations[i]=data;this.persist('inspirations');});},
+    refreshHotTopics(){this.hotTopics=[...HOT_TOPICS_POOL].sort(()=>Math.random()-0.5).slice(0,5);this.showToast('选题已刷新','info');},
+    useHotTopic(topic){this.openModal('inspiration','从选题创建',{title:topic.slice(0,30),content:topic,tagsStr:'热门选题',tags:[],date:today()},(data)=>{data.id=uid();data.tags=data.tagsStr.split(/[,，]/).map(s=>s.trim()).filter(Boolean);data.source='hot_topic';this.inspirations.push(data);this.persist('inspirations');});},
+
+    // Summary
+    addSummary(){this.openModal('summary','写今日总结',{date:today(),mood:'😊',content:'',images:[]},(data)=>{data.id=uid();this.summaries.push(data);this.persist('summaries');});},
+    editSummary(s){this.openModal('summary','编辑总结',s,(data)=>{const i=this.summaries.findIndex(x=>x.id===s.id);if(i>=0)this.summaries[i]=data;this.persist('summaries');});},
+    pickImage(){this.$refs.imageInput.click();},
+    onImagePicked(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{this.modal.data.images.push(ev.target.result);};r.readAsDataURL(f);e.target.value='';},
+    previewImage(src){this.imagePreview=src;},
+
+    // Income
+    addIncome(){this.openModal('income','记一笔收入',{date:today(),project:'',amount:0,notes:''},(data)=>{data.id=uid();this.incomes.push(data);this.persist('incomes');});},
+    editIncome(item){this.openModal('income','编辑收入',item,(data)=>{const i=this.incomes.findIndex(x=>x.id===item.id);if(i>=0)this.incomes[i]=data;this.persist('incomes');});},
+    deleteIncome(item){this.showConfirm('确定删除这条记录吗？',()=>{this.incomes=this.incomes.filter(x=>x.id!==item.id);this.persist('incomes');this.showToast('已删除','info');},{danger:true,okText:'删除',icon:'🗑️'});},
+
+    // Study
+    addStudyLog(){this.openModal('studyLog','添加学习',{date:today(),subject:'',durationMinutes:60,notes:''},(data)=>{data.id=uid();this.studyLogs.push(data);this.persist('studyLogs');});},
+    editStudyLog(l){this.openModal('studyLog','编辑学习',l,(data)=>{const i=this.studyLogs.findIndex(x=>x.id===l.id);if(i>=0)this.studyLogs[i]=data;this.persist('studyLogs');});},
+    deleteStudyLog(l){this.showConfirm('确定删除吗？',()=>{this.studyLogs=this.studyLogs.filter(x=>x.id!==l.id);this.persist('studyLogs');this.showToast('已删除','info');},{danger:true,okText:'删除',icon:'🗑️'});},
+
+    // Reading
+    addReadingLog(){this.openModal('readingLog','添加读书',{date:today(),bookTitle:'',author:'',pages:0,notes:''},(data)=>{data.id=uid();this.readingLogs.push(data);this.persist('readingLogs');});},
+    editReadingLog(l){this.openModal('readingLog','编辑读书',l,(data)=>{const i=this.readingLogs.findIndex(x=>x.id===l.id);if(i>=0)this.readingLogs[i]=data;this.persist('readingLogs');});},
+    deleteReadingLog(l){this.showConfirm('确定删除吗？',()=>{this.readingLogs=this.readingLogs.filter(x=>x.id!==l.id);this.persist('readingLogs');this.showToast('已删除','info');},{danger:true,okText:'删除',icon:'🗑️'});},
+
+    // Exercise
+    addExerciseLog(){this.openModal('exerciseLog','添加运动',{date:today(),type:'shoulder_stretch',customType:'',durationMinutes:30,exercises:'',completed:true},(data)=>{data.id=uid();this.exerciseLogs.push(data);this.persist('exerciseLogs');});},
+    editExerciseLog(l){this.openModal('exerciseLog','编辑运动',l,(data)=>{const i=this.exerciseLogs.findIndex(x=>x.id===l.id);if(i>=0)this.exerciseLogs[i]=data;this.persist('exerciseLogs');});},
+    deleteExerciseLog(l){this.showConfirm('确定删除吗？',()=>{this.exerciseLogs=this.exerciseLogs.filter(x=>x.id!==l.id);this.persist('exerciseLogs');this.showToast('已删除','info');},{danger:true,okText:'删除',icon:'🗑️'});},
+
+    // Data Management
+    exportData(){
+      const data={orders:this.orders,tools:this.tools,habits:this.habits,habitLogs:this.habitLogs,dailyTasks:this.dailyTasks,inspirations:this.inspirations,summaries:this.summaries,incomes:this.incomes,studyLogs:this.studyLogs,readingLogs:this.readingLogs,exerciseLogs:this.exerciseLogs,douyinVideos:this.douyinVideos,exportDate:today(),version:'2.0'};
+      const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+      const url=URL.createObjectURL(blob);const a=document.createElement('a');
+      a.href=url;a.download='工作台备份_'+today()+'.json';a.click();URL.revokeObjectURL(url);
+      this.showToast('数据导出成功📤','success');
+    },
+    importDataPrompt(){this.$refs.importFile.click();},
+    importData(e){
+      const f=e.target.files[0];if(!f)return;
+      const r=new FileReader();
+      r.onload=ev=>{
+        try{
+          const data=JSON.parse(ev.target.result);
+          const keys=['orders','tools','habits','habitLogs','dailyTasks','inspirations','summaries','incomes','studyLogs','readingLogs','exerciseLogs','douyinVideos'];
+          keys.forEach(k=>{if(data[k]){this[k]=data[k];save(k,data[k]);}});
+          this.showToast('数据导入成功📥','success');
+        }catch(ex){this.showToast('文件格式不正确','error');}
       };
-      if (map[key] !== undefined) save(key, map[key]);
-      if (key === 'userName') save('userName', this.userName);
+      r.readAsText(f);e.target.value='';
     },
-
-    // ===== NAVIGATION =====
-    switchTab(tab) { this.currentTab = tab; },
-    switchSubTab(sub) { this.currentSubTab = sub; },
-
-    // ===== TOAST =====
-    showToast(message, type = 'info') {
-      this.toasts.push({ message, type });
-      setTimeout(() => { this.toasts.shift(); }, 2500);
-    },
-
-    // ===== MODAL =====
-    openModal(type, title, data, saveCallback) {
-      this.modal = { show: true, type, title, data: JSON.parse(JSON.stringify(data || {})), saveCallback };
-    },
-    closeModal() { this.modal.show = false; },
-    saveModal() {
-      if (this.modal.saveCallback) this.modal.saveCallback(this.modal.data);
-      this.modal.show = false;
-      this.showToast('保存成功', 'success');
-    },
-
-    // ===== CONFIRM =====
-    showConfirm(message, onOk, opts = {}) {
-      this.confirm = { show: true, message, icon: opts.icon || '⚠️', okText: opts.okText || '确认', danger: opts.danger || false, onOk, onCancel: opts.onCancel || null };
-    },
-
-    // ===== HELPER =====
-    getHabitById(id) { return this.habits.find(h => h.id === id); },
-
-    // ===== ORDERS =====
-    addOrder() {
-      this.openModal('order', '新增订单', {
-        title: '', customer: '', amount: 0, status: 'pending', date: today(), notes: '', createdAt: Date.now()
-      }, (data) => {
-        data.id = uid(); data.createdAt = Date.now();
-        this.orders.push(data);
-        this.persist('orders');
-      });
-    },
-    editOrder(o) {
-      this.openModal('order', '编辑订单', o, (data) => {
-        const idx = this.orders.findIndex(x => x.id === o.id);
-        if (idx >= 0) { data.createdAt = o.createdAt; this.orders[idx] = data; }
-        this.persist('orders');
-      });
-    },
-    confirmDeleteOrder(o) {
-      this.showConfirm(`确定删除订单「${o.title}」吗？此操作不可撤销。`, () => {
-        this.orders = this.orders.filter(x => x.id !== o.id);
-        this.persist('orders');
-        this.showToast('已删除', 'info');
-      }, { danger: true, okText: '删除', icon: '🗑️' });
-    },
-
-    // ===== TOOLS =====
-    addTool() {
-      this.openModal('tool', '添加网址', {
-        title: '', url: 'https://', icon: '🔗', category: 'other'
-      }, (data) => {
-        data.id = uid(); data.createdAt = Date.now();
-        this.tools.push(data);
-        this.persist('tools');
-      });
-    },
-    editTool(t) {
-      this.openModal('tool', '编辑网址', t, (data) => {
-        const idx = this.tools.findIndex(x => x.id === t.id);
-        if (idx >= 0) this.tools[idx] = data;
-        this.persist('tools');
-      });
-    },
-    deleteTool(t) {
-      this.showConfirm(`确定删除「${t.title}」吗？`, () => {
-        this.tools = this.tools.filter(x => x.id !== t.id);
-        this.persist('tools');
-        this.showToast('已删除', 'info');
-      }, { danger: true, okText: '删除', icon: '🗑️' });
-    },
-
-    // ===== HABITS =====
-    toggleHabit(h) {
-      h.enabled = !h.enabled;
-      this.persist('habits');
-      this.restartReminders();
-      if (h.enabled) this.showToast(`已开启「${h.name}」提醒`, 'success');
-    },
-    addHabit() {
-      this.openModal('habit', '添加习惯', {
-        name: '', icon: '🔔', intervalMinutes: 30, enabled: true, description: ''
-      }, (data) => {
-        data.id = uid();
-        this.habits.push(data);
-        this.persist('habits');
-        this.restartReminders();
-      });
-    },
-    editHabit(h) {
-      this.openModal('habit', '编辑习惯', h, (data) => {
-        const idx = this.habits.findIndex(x => x.id === h.id);
-        if (idx >= 0) this.habits[idx] = data;
-        this.persist('habits');
-        this.restartReminders();
-      });
-    },
-    drinkWater() {
-      const h = this.habits.find(x => x.name.includes('喝水'));
-      const hid = h ? h.id : 'water';
-      this.habitLogs.push({ id: uid(), habitId: hid, date: today(), time: now(), done: true });
-      this.persist('habitLogs');
-      this.showToast('💧 喝水 +1，今天已喝 ' + this.todayWaterCount + ' 杯', 'success');
-    },
-    doStretch() {
-      const h = this.habits.find(x => x.name.includes('拉伸'));
-      const hid = h ? h.id : 'stretch';
-      this.habitLogs.push({ id: uid(), habitId: hid, date: today(), time: now(), done: true });
-      this.persist('habitLogs');
-      this.showToast('🧘 拉伸 +1', 'success');
-    },
-    doEyeRest() {
-      const h = this.habits.find(x => x.name.includes('护眼'));
-      const hid = h ? h.id : 'eye';
-      this.habitLogs.push({ id: uid(), habitId: hid, date: today(), time: now(), done: true });
-      this.persist('habitLogs');
-      this.showToast('👁️ 护眼 +1', 'success');
-    },
-
-    // ===== REMINDERS =====
-    initHealthReminders() {
-      this.restartReminders();
-    },
-    restartReminders() {
-      this.reminderTimers.forEach(t => clearInterval(t));
-      this.reminderTimers = [];
-      this.habits.filter(h => h.enabled).forEach(h => {
-        const timer = setInterval(() => {
-          this.sendNotification(h);
-        }, h.intervalMinutes * 60 * 1000);
-        this.reminderTimers.push(timer);
-        // Send first notification after a short delay
-        setTimeout(() => this.sendNotification(h), 3000);
-      });
-    },
-    sendNotification(h) {
-      const nowTime = now();
-      const lastTime = this.lastReminderTime[h.id] || '';
-      // Avoid duplicate reminders within the same minute
-      if (lastTime === nowTime.slice(0,5)) return;
-      this.lastReminderTime[h.id] = nowTime.slice(0,5);
-
-      // Browser Notification API
-      if ('Notification' in window && Notification.permission === 'granted') {
-        new Notification(`${h.icon} ${h.name}`, {
-          body: h.description || `该${h.name}啦！`,
-          icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="80" font-size="80">'+h.icon+'</text></svg>',
-          tag: h.id,
-          requireInteraction: true,
-          silent: false,
-        });
-      }
-      // In-app toast as fallback
-      this.showToast(`${h.icon} ${h.name} — ${h.description}`, 'info');
-    },
-    requestNotificationPermission() {
-      if ('Notification' in window && Notification.permission === 'default') {
-        Notification.requestPermission().then(p => {
-          if (p === 'granted') this.showToast('桌面通知已开启 ✅', 'success');
-        });
-      }
-    },
-
-    // ===== DAILY TASKS =====
-    toggleDailyTask(task) {
-      task.completed = !task.completed;
-      this.persist('dailyTasks');
-    },
-    addDailyTask() {
-      this.openModal('dailyTask', '新增任务', {
-        task: '', time: '12:00'
-      }, (data) => {
-        data.id = uid(); data.completed = false; data.date = today(); data.isPreset = false;
-        this.dailyTasks.push(data);
-        this.persist('dailyTasks');
-      });
-    },
-    editDailyTask(task) {
-      this.openModal('dailyTask', '编辑任务', task, (data) => {
-        const idx = this.dailyTasks.findIndex(x => x.id === task.id);
-        if (idx >= 0) { data.completed = task.completed; data.date = task.date; data.isPreset = task.isPreset; data.id = task.id; this.dailyTasks[idx] = data; }
-        this.persist('dailyTasks');
-      });
-    },
-    deleteDailyTask(task) {
-      this.showConfirm(`确定删除「${task.task}」吗？`, () => {
-        this.dailyTasks = this.dailyTasks.filter(x => x.id !== task.id);
-        this.persist('dailyTasks');
-        this.showToast('已删除', 'info');
-      }, { danger: true, okText: '删除', icon: '🗑️' });
-    },
-    toggleExerciseDone() {
-      this.exerciseDoneToday = !this.exerciseDoneToday;
-      save('exerciseDoneToday', this.exerciseDoneToday ? today() : '');
-      if (this.exerciseDoneToday) {
-        // Also log an exercise record
-        this.exerciseLogs.push({
-          id: uid(), date: today(), type: 'shoulder_stretch',
-          durationMinutes: 15, exercises: '肩颈拉伸+增肌塑形', completed: true
-        });
-        this.persist('exerciseLogs');
-        this.showToast('🎉 今日运动完成！太棒了！', 'success');
-      }
-    },
-
-    // ===== INSPIRATION =====
-    addInspiration() {
-      this.openModal('inspiration', '添加灵感', {
-        title: '', content: '', tagsStr: '', tags: [], date: today()
-      }, (data) => {
-        data.id = uid(); data.tags = data.tagsStr.split(/[,，]/).map(s=>s.trim()).filter(Boolean);
-        this.inspirations.push(data);
-        this.persist('inspirations');
-      });
-    },
-    editInspiration(item) {
-      const d = JSON.parse(JSON.stringify(item));
-      d.tagsStr = (d.tags||[]).join(', ');
-      this.openModal('inspiration', '编辑灵感', d, (data) => {
-        data.tags = data.tagsStr.split(/[,，]/).map(s=>s.trim()).filter(Boolean);
-        const idx = this.inspirations.findIndex(x => x.id === item.id);
-        if (idx >= 0) this.inspirations[idx] = data;
-        this.persist('inspirations');
-      });
-    },
-    refreshHotTopics() {
-      this.hotTopics = [...HOT_TOPICS_POOL].sort(() => Math.random() - 0.5).slice(0, 5);
-      this.showToast('选题已刷新', 'info');
-    },
-    useHotTopic(topic) {
-      this.openModal('inspiration', '从选题创建灵感', {
-        title: topic.slice(0,30), content: topic, tagsStr: '热门选题', tags: [], date: today()
-      }, (data) => {
-        data.id = uid(); data.tags = data.tagsStr.split(/[,，]/).map(s=>s.trim()).filter(Boolean);
-        data.source = 'hot_topic';
-        this.inspirations.push(data);
-        this.persist('inspirations');
-      });
-    },
-
-    // ===== SUMMARY =====
-    addSummary() {
-      this.openModal('summary', '写今日总结', {
-        date: today(), mood: '😊', content: '', images: []
-      }, (data) => {
-        data.id = uid();
-        this.summaries.push(data);
-        this.persist('summaries');
-      });
-    },
-    editSummary(s) {
-      this.openModal('summary', '编辑总结', s, (data) => {
-        const idx = this.summaries.findIndex(x => x.id === s.id);
-        if (idx >= 0) this.summaries[idx] = data;
-        this.persist('summaries');
-      });
-    },
-    pickImage() {
-      this.$refs.imageInput.click();
-    },
-    onImagePicked(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        this.modal.data.images.push(ev.target.result);
-      };
-      reader.readAsDataURL(file);
-      e.target.value = '';
-    },
-    previewImage(src) {
-      this.imagePreview = src;
-    },
-
-    // ===== INCOME =====
-    addIncome() {
-      this.openModal('income', '记一笔收入', {
-        date: today(), project: '', amount: 0, notes: ''
-      }, (data) => {
-        data.id = uid();
-        this.incomes.push(data);
-        this.persist('incomes');
-      });
-    },
-    editIncome(item) {
-      this.openModal('income', '编辑收入记录', item, (data) => {
-        const idx = this.incomes.findIndex(x => x.id === item.id);
-        if (idx >= 0) this.incomes[idx] = data;
-        this.persist('incomes');
-      });
-    },
-    deleteIncome(item) {
-      this.showConfirm(`确定删除这条收入记录吗？`, () => {
-        this.incomes = this.incomes.filter(x => x.id !== item.id);
-        this.persist('incomes');
-        this.showToast('已删除', 'info');
-      }, { danger: true, okText: '删除', icon: '🗑️' });
-    },
-
-    // ===== STUDY =====
-    addStudyLog() {
-      this.openModal('studyLog', '添加学习记录', {
-        date: today(), subject: '', durationMinutes: 60, notes: ''
-      }, (data) => {
-        data.id = uid();
-        this.studyLogs.push(data);
-        this.persist('studyLogs');
-      });
-    },
-    editStudyLog(log) {
-      this.openModal('studyLog', '编辑学习记录', log, (data) => {
-        const idx = this.studyLogs.findIndex(x => x.id === log.id);
-        if (idx >= 0) this.studyLogs[idx] = data;
-        this.persist('studyLogs');
-      });
-    },
-    deleteStudyLog(log) {
-      this.showConfirm('确定删除这条学习记录吗？', () => {
-        this.studyLogs = this.studyLogs.filter(x => x.id !== log.id);
-        this.persist('studyLogs');
-        this.showToast('已删除', 'info');
-      }, { danger: true, okText: '删除', icon: '🗑️' });
-    },
-
-    // ===== READING =====
-    addReadingLog() {
-      this.openModal('readingLog', '添加读书记录', {
-        date: today(), bookTitle: '', author: '', pages: 0, notes: ''
-      }, (data) => {
-        data.id = uid();
-        this.readingLogs.push(data);
-        this.persist('readingLogs');
-      });
-    },
-    editReadingLog(log) {
-      this.openModal('readingLog', '编辑读书记录', log, (data) => {
-        const idx = this.readingLogs.findIndex(x => x.id === log.id);
-        if (idx >= 0) this.readingLogs[idx] = data;
-        this.persist('readingLogs');
-      });
-    },
-    deleteReadingLog(log) {
-      this.showConfirm('确定删除这条读书记录吗？', () => {
-        this.readingLogs = this.readingLogs.filter(x => x.id !== log.id);
-        this.persist('readingLogs');
-        this.showToast('已删除', 'info');
-      }, { danger: true, okText: '删除', icon: '🗑️' });
-    },
-
-    // ===== EXERCISE =====
-    addExerciseLog() {
-      this.openModal('exerciseLog', '添加运动记录', {
-        date: today(), type: 'shoulder_stretch', customType: '', durationMinutes: 30, exercises: '', completed: true
-      }, (data) => {
-        data.id = uid();
-        this.exerciseLogs.push(data);
-        this.persist('exerciseLogs');
-      });
-    },
-    editExerciseLog(log) {
-      this.openModal('exerciseLog', '编辑运动记录', log, (data) => {
-        const idx = this.exerciseLogs.findIndex(x => x.id === log.id);
-        if (idx >= 0) this.exerciseLogs[idx] = data;
-        this.persist('exerciseLogs');
-      });
-    },
-    deleteExerciseLog(log) {
-      this.showConfirm('确定删除这条运动记录吗？', () => {
-        this.exerciseLogs = this.exerciseLogs.filter(x => x.id !== log.id);
-        this.persist('exerciseLogs');
-        this.showToast('已删除', 'info');
-      }, { danger: true, okText: '删除', icon: '🗑️' });
-    },
-
-    // ===== DATA MANAGEMENT =====
-    exportData() {
-      const data = {
-        orders: this.orders, tools: this.tools, habits: this.habits,
-        habitLogs: this.habitLogs, dailyTasks: this.dailyTasks,
-        inspirations: this.inspirations, summaries: this.summaries,
-        incomes: this.incomes, studyLogs: this.studyLogs,
-        readingLogs: this.readingLogs, exerciseLogs: this.exerciseLogs,
-        userName: this.userName,
-        exportDate: today(), version: '1.0'
-      };
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = `工作台备份_${today()}.json`;
-      a.click(); URL.revokeObjectURL(url);
-      this.showToast('数据导出成功 📤', 'success');
-    },
-    importDataPrompt() {
-      this.$refs.importFile.click();
-    },
-    importData(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        try {
-          const data = JSON.parse(ev.target.result);
-          if (data.version) {
-            Object.keys(data).forEach(k => {
-              if (k !== 'exportDate' && k !== 'version' && data[k] !== undefined) {
-                if (k === 'userName') { this.userName = data[k]; save('userName', data[k]); }
-                else if (Array.isArray(data[k])) { this[k] = data[k]; save(k, data[k]); }
-              }
-            });
-            this.showToast('数据导入成功 📥', 'success');
-          } else {
-            this.showToast('文件格式不正确', 'error');
-          }
-        } catch(ex) {
-          this.showToast('文件解析失败', 'error');
-        }
-      };
-      reader.readAsText(file);
-      e.target.value = '';
-    },
-    confirmClearAll() {
-      this.showConfirm('⚠️ 确定要清除全部数据吗？\n此操作不可撤销，建议先导出备份。', () => {
-        const keys = ['orders','tools','habits','habitLogs','dailyTasks','inspirations','summaries','incomes','studyLogs','readingLogs','exerciseLogs','userName'];
-        keys.forEach(k => { localStorage.removeItem(DB_PREFIX + k); });
-        this.loadAllData();
-        this.showToast('所有数据已清除', 'info');
-      }, { danger: true, okText: '确认清除', icon: '⚠️' });
-    },
-
-    // ===== RESIZE =====
-    handleResize() {
-      this.isDesktop = window.innerWidth > 768;
+    confirmClearAll(){
+      this.showConfirm('⚠️ 确定要清除全部数据吗？\n建议先导出备份！',()=>{
+        const keys=['orders','tools','habits','habitLogs','dailyTasks','inspirations','summaries','incomes','studyLogs','readingLogs','exerciseLogs','douyinVideos'];
+        keys.forEach(k=>{localStorage.removeItem(DB_PREFIX+k);});
+        this.loadAllData();this.showToast('所有数据已清除','info');
+      },{danger:true,okText:'确认清除',icon:'⚠️'});
     },
   },
-
-  mounted() {
+  mounted(){
     this.loadAllData();
     this.initHealthReminders();
-    window.addEventListener('resize', this.handleResize);
-
-    // Request notification permission on first interaction
-    setTimeout(() => this.requestNotificationPermission(), 2000);
-    document.addEventListener('click', () => {
-      this.requestNotificationPermission();
-    }, { once: true });
+    setTimeout(()=>this.requestNotificationPermission(),2000);
+    document.addEventListener('click',()=>{this.requestNotificationPermission();},{once:true});
   },
-
-  beforeUnmount() {
-    this.reminderTimers.forEach(t => clearInterval(t));
-    window.removeEventListener('resize', this.handleResize);
-  }
+  beforeUnmount(){this.reminderTimers.forEach(t=>clearInterval(t));}
 });
-
 app.mount('#app');
 </script>
 </body>
