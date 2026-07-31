@@ -455,6 +455,7 @@ img{max-width:100%;display:block}
     <span class="top-bar-title">{{pageTitle}}</span>
   </div>
   <div class="top-bar-right">
+    <span v-if="userName" style="font-size:12px;color:var(--text-light);margin-right:4px;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{userName}}</span>
     <button class="top-action" @click="navigateTo('douyin');closeDrawer()" title="抖音数据">📊</button>
     <button class="top-action" @click="navigateTo('daily');closeDrawer()" title="每日计划">✅</button>
   </div>
@@ -465,6 +466,10 @@ img{max-width:100%;display:block}
 
 <!-- ===== DRAWER ===== -->
 <nav class="drawer" :class="{open:drawerOpen}">
+  <div style="padding:4px 16px 12px;text-align:center;border-bottom:1px solid var(--border);margin-bottom:4px">
+    <div style="font-size:18px;font-weight:700;color:var(--primary)">Cet desk</div>
+    <div style="font-size:11px;color:var(--text-light);margin-top:2px">📊 创作数据看板 · 记录每一步成长</div>
+  </div>
   <div class="drawer-section">
     <div class="drawer-section-title">🎬 创作工作栏</div>
     <button class="drawer-item" :class="{active:currentPage==='home'}" @click="navigateTo('home');closeDrawer()">
