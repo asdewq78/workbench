@@ -56,9 +56,11 @@ body{
   line-height:1.5;
   -webkit-font-smoothing:antialiased;
   height:100vh;height:100dvh;
+  min-height:-webkit-fill-available;
   overflow:hidden;
   user-select:none;
   -webkit-user-select:none;
+  padding-top:env(safe-area-inset-top);
   background-image:
     radial-gradient(ellipse at 20% 20%, rgba(123,158,199,0.08) 0%, transparent 60%),
     radial-gradient(ellipse at 80% 70%, rgba(199,169,169,0.06) 0%, transparent 60%),
@@ -90,7 +92,7 @@ img{max-width:100%;display:block}
 .glass.clickable:active{transform:scale(0.985)}
 
 /* ===== Layout ===== */
-#app{display:flex;height:100vh;height:100dvh;overflow:hidden}
+#app{display:flex;height:100vh;height:100dvh;height:-webkit-fill-available;overflow:hidden}
 
 /* Sidebar (Desktop) */
 .sidebar{
