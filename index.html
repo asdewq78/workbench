@@ -610,7 +610,7 @@ img{max-width:100%;display:block}
 <!-- ========== DOUYIN DATA ========== -->
 <section class="page" v-show="currentPage==='douyin'">
   <div style="font-size:20px;font-weight:700;color:var(--text-dark);margin-bottom:4px">📊 抖音数据</div>
-  <div style="font-size:12px;color:var(--text-light);margin-bottom:16px">手动录入作品数据，追踪表现趋势</div>
+  <div style="font-size:12px;color:var(--text-light);margin-bottom:16px">📎 粘贴链接快速录入，打开抖音对照填入数据</div>
 
   <div class="dash-stats" style="margin-bottom:16px">
     <div class="dash-stat glass"><div class="dash-stat-icon">▶️</div><div class="dash-stat-value">{{formatLargeNum(totalDouyinViews)}}</div><div class="dash-stat-label">总播放</div></div>
@@ -633,7 +633,8 @@ img{max-width:100%;display:block}
       <button class="btn-icon" @click.stop="deleteDouyinVideo(v)" style="width:28px;height:28px;font-size:12px">🗑️</button>
     </div>
   </div>
-  <button class="btn btn-primary w-full mt-md" @click="addDouyinVideo">＋ 录入作品数据</button>
+  <button class="btn btn-primary w-full mt-md" @click="addDouyinVideoQuick">📎 粘贴链接快速录入</button>
+  <button class="btn btn-outline w-full mt-sm" @click="addDouyinVideo">＋ 手动录入（无链接）</button>
 </section>
 
 <!-- ========== ORDERS ========== -->
@@ -1112,6 +1113,16 @@ const app=Vue.createApp({
     showConfirm(msg,onOk,opts={}){this.confirm={show:true,message:msg,icon:opts.icon||'⚠️',okText:opts.okText||'确认',danger:opts.danger||false,onOk};},
 
     // Douyin Videos
+    addDouyinVideoQuick(){
+      const url=prompt('📎 粘贴抖音作品链接：');
+      if(!url||!url.trim())return;
+      let title='';
+      try{const u=new URL(url.trim());title=u.hostname.replace('www.','')+' 作品';}catch(e){title='新作品';}
+      this.openModal('douyinVideo','快速录入 · 打开抖音查看数据填入',{title:title,url:url.trim(),views:0,likes:0,comments:0,shares:0,date:today(),notes:'',createdAt:Date.now()},(data)=>{
+        data.id=uid();data.createdAt=Date.now();
+        this.douyinVideos.push(data);this.persist('douyinVideos');
+      });
+    },
     addDouyinVideo(){
       this.openModal('douyinVideo','录入作品数据',{title:'',url:'',views:0,likes:0,comments:0,shares:0,date:today(),notes:'',createdAt:Date.now()},(data)=>{
         data.id=uid();data.createdAt=Date.now();
