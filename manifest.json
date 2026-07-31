@@ -1,7 +1,7 @@
 {
-  "name": "我的工作台",
-  "short_name": "工作台",
-  "description": "个人工作台 — 订单管理、每日计划、健康提醒、灵感存档、每日总结、赚钱记录",
+  "name": "Cet desk",
+  "short_name": "Cet desk",
+  "description": "创作数据看板 — 抖音数据分析、订单管理、灵感存档、每日计划、收入记账",
   "start_url": "./index.html",
   "display": "standalone",
   "orientation": "portrait-primary",
